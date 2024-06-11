@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Registration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet"/>
+    <title>Sign up</title>
+</head>
+
+<body>
+
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="col-md-4">
+        <h1 class="mb-3 text-center">Sign up</h1>
+        <form method="post" th:action="@{/signup}" th:object="${signupRequest}">
+
+            <div class="form-outline mb-4">
+                <input class="form-control" id="username" required th:field="*{username}" type="text"/>
+                <label class="form-label" for="username">Username</label>
+            </div>
+
+            <div class="form-outline mb-4">
+                <input class="form-control" id="password" required th:field="*{password}" type="password"/>
+                <label class="form-label" for="password">Password</label>
+            </div>
+
+            <div class="form-outline mb-4">
+                <input class="form-control" id="passwordConfirmation" required th:field="*{passwordConfirmation}" type="password"/>
+                <label class="form-label" for="passwordConfirmation">Password Confirmation</label>
+            </div>
+
+            <button class="btn btn-primary btn-block mb-4" type="submit">Register</button>
+
+            <div class="alert alert-warning text-center" th:if="${exceptionMessage}" th:text="${exceptionMessage}"></div>
+            <div class="alert alert-warning text-center" th:if="${validationErrorMessage}" th:text="${validationErrorMessage}"></div>
+
+            <div class="text-center">
+                <p>Back to login page?</p>
+                <a href="/login" th:href="@{/login}">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js" type="text/javascript"></script>
+</body>
+
+</html>
