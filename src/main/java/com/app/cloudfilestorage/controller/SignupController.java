@@ -3,6 +3,7 @@ package com.app.cloudfilestorage.controller;
 import com.app.cloudfilestorage.dto.request.SignupRequest;
 import com.app.cloudfilestorage.exception.SignupException;
 import com.app.cloudfilestorage.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+
+import static com.app.cloudfilestorage.utils.BindingResultResolver.getFirstMessage;
 
 @Controller
 @RequestMapping("/signup")
@@ -30,11 +33,11 @@ public class SignupController {
     }
 
     @PostMapping
-    public RedirectView signupUser(@ModelAttribute SignupRequest signupRequest,
+    public RedirectView signupUser(@Valid @ModelAttribute SignupRequest signupRequest,
                                    BindingResult bindingResult,
                                    RedirectAttributes redirectAttributes) throws SignupException {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute("validationErrors", bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("validationErrorMessage", getFirstMessage(bindingResult));
             return new RedirectView("/signup");
         }
 
