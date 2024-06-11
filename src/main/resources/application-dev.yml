@@ -1,0 +1,40 @@
+server:
+  port: 8089
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5430/cloudstoragedb
+    username: dbusername
+    password: dbpassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+      enabled: true
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: redispassword
+
+minio:
+  endpoint: http://localhost:9000
+  bucket-name: user-files
+  username: minio-user
+  password: minio-password
