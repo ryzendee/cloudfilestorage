@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
-            log.warn("Failed to save user", ex);
-            throw new SignupException("Failed to save user, username already exists: " + user.getUsername(), ex);
+            log.warn("Failed to save user: {}", user.getUsername(), ex);
+            throw new SignupException("Failed to save user, username already exists");
         }
     }
 }
