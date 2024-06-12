@@ -18,6 +18,8 @@
         <h1 class="mb-3 text-center">Sign up</h1>
         <form method="post" th:action="@{/signup}" th:object="${signupRequest}">
 
+            <!--Main form part-->
+
             <div class="form-outline mb-4">
                 <input class="form-control" id="username" required th:field="*{username}" type="text"/>
                 <label class="form-label" for="username">Username</label>
@@ -35,11 +37,13 @@
 
             <button class="btn btn-primary btn-block mb-4" type="submit">Register</button>
 
+            <!--Messages-->
             <div class="alert alert-warning text-center" th:if="${exceptionMessage}" th:text="${exceptionMessage}"></div>
             <div class="alert alert-warning text-center" th:if="${validationErrorMessage}" th:text="${validationErrorMessage}"></div>
 
+            <!--To login page-->
             <div class="text-center">
-                <p>Back to login page?</p>
+                <p>Want back to login page?</p>
                 <a href="/login" th:href="@{/login}">Login</a>
             </div>
         </form>
