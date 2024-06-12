@@ -42,6 +42,7 @@ public class SignupController {
         }
 
         userService.createUser(signupRequest);
+        redirectAttributes.addFlashAttribute("successMessage", "You have been successfully registered");
 
         return new RedirectView("/login");
     }
