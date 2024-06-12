@@ -40,8 +40,6 @@ public class SecurityConfig {
                         .permitAll()
                 ).logout(logoutConfigurer -> logoutConfigurer
                         .logoutUrl("/logout")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
                 ).authorizeHttpRequests(requestMatcher -> requestMatcher
                         .requestMatchers(
                                 "/signup",
