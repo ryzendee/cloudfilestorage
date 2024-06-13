@@ -37,5 +37,4 @@
     endpoint: http://localhost:9000
     username: minio-user
     password: minio-password
-    buckets:
-      - user-files
+    bucket: user-files

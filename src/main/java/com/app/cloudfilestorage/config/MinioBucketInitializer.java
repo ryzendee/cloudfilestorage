@@ -20,14 +20,16 @@ public class MinioBucketInitializer {
     private final MinioProperties minioProperties;
     private final MinioClient minioClient;
 
+
     @PostConstruct
-    public void initializeBuckets() {
+    public void initializeBucket() {
         try {
-            for (String bucketName : minioProperties.buckets()) {
-                if (!isBucketExists(bucketName)) {
-                    createBucket(bucketName);
-                }
+            String bucketName = minioProperties.bucket();
+
+            if (!isBucketExists(bucketName)) {
+                createBucket(bucketName);
             }
+
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

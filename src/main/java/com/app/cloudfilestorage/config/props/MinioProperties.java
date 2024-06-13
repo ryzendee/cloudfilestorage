@@ -8,7 +8,7 @@ public record MinioProperties (
         String endpoint,
         String username,
         String password,
-        String[] buckets
+        String bucket
 ) {
 
 }
