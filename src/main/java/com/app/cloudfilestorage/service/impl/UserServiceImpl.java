@@ -3,6 +3,7 @@ package com.app.cloudfilestorage.service.impl;
 import com.app.cloudfilestorage.dto.request.SignupRequest;
 import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.exception.SignupException;
+import com.app.cloudfilestorage.exception.UserNotFoundException;
 import com.app.cloudfilestorage.mapper.SignUpToUserMapper;
 import com.app.cloudfilestorage.repository.UserRepository;
 import com.app.cloudfilestorage.service.UserService;
@@ -20,6 +21,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SignUpToUserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserEntity getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found! Username: " + username));
+    }
 
     @Override
     public void createUser(SignupRequest signupRequest) throws SignupException {
