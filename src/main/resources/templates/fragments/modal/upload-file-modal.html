@@ -1,0 +1,23 @@
+<div aria-hidden="true" aria-labelledby="FileUploadModalTitle" class="modal fade" id="fileUploadModal"
+     tabindex="-1" th:fragment="file-upload-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fileUploadModalTitle">File upload</h5>
+                <button aria-label="Close" class="btn-close" data-mdb-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" id="fileUploadForm" method="post" th:action="@{/files}"
+                      th:object="${fileUploadRequest}">
+                    <label class="form-label" for="fileUploadInput">Select file</label>
+                    <input class="form-control" id="fileUploadInput" th:field="*{file}" type="file"/>
+                    <input th:field="*{ownerId}" th:value="${session.userSessionDto}" type="hidden"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-mdb-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" form="fileUploadForm" type="submit">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>

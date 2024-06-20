@@ -1,0 +1,23 @@
+<div aria-hidden="true" aria-labelledby="folderUploadModalTitle" class="modal fade" id="folderCreateModal"
+     tabindex="-1" th:fragment="folder-create-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="folderCreateModalTitle">Create folder</h5>
+                <button aria-label="Close" class="btn-close" data-mdb-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="folderCreateForm" method="post" th:action="@{/folders}"
+                      th:object="${folderCreateRequest}">
+                    <label class="form-label" for="folderCreateInput">Enter folder name</label>
+                    <input class="form-control" id="folderCreateInput" th:field="*{name}" type="text">
+                    <input th:field="*{ownerId}" th:value="${session.userSessionDto}" type="hidden"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-mdb-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" form="folderCreateForm" type="submit">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
