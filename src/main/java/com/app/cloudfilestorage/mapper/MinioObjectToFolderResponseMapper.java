@@ -3,18 +3,22 @@ package com.app.cloudfilestorage.mapper;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.models.MinioObject;
 import com.app.cloudfilestorage.utils.FileNameFormatterUtil;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.Named;
+import com.app.cloudfilestorage.utils.PathGeneratorUtil;
+import org.mapstruct.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface MinioObjectToFolderResponseMapper extends BaseMapper<MinioObject, FolderResponse> {
+public interface MinioObjectToFolderResponseMapper {
     @Mapping(source = "path", target = "name", qualifiedByName = "formatFolderNameFromPath")
-    FolderResponse map(MinioObject from);
+    @Mapping(source = "path", target = "path", qualifiedByName = "removeRootUserFolderFromPath")
+    FolderResponse map(MinioObject from, @Context Long userId);
 
     @Named("formatFolderNameFromPath")
     default String formatFolderNameFromPath(String path) {
         return FileNameFormatterUtil.formatFilenameFromPath(path);
+    }
+
+    @Named("removeRootUserFolderFromPath")
+    default String removeRootUserFolderFromPath(@Context Long userId, String path) {
+        return PathGeneratorUtil.removeTemplateFromPath(userId, path);
     }
 }
