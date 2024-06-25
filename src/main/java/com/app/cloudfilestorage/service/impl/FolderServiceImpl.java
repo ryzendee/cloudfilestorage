@@ -2,6 +2,7 @@ package com.app.cloudfilestorage.service.impl;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
+import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.exception.MappingException;
@@ -57,9 +58,18 @@ public class FolderServiceImpl implements FolderService {
         try {
             List<MinioSaveDataDto> minioSaveDataDtoList = folderUploadReqToMinioSaveDtoListMapper.map(uploadRequest);
             minioRepository.saveAll(minioSaveDataDtoList);
-            log.info("Deleted folder");
         } catch (MappingException | MinioRepositoryException ex) {
             log.warn("Failed to upload folder", ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void deleteFolder(FolderDeleteRequest deleteRequest) {
+        try {
+            String formattedPath = formatPath(deleteRequest.getOwnerId(), deleteRequest.getFolderPath());
+            minioRepository.deleteAllRecursive(formattedPath);
+        } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
         }
     }

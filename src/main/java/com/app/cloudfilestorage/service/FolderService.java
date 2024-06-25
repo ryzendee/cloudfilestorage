@@ -1,6 +1,7 @@
 package com.app.cloudfilestorage.service;
 
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
+import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 
@@ -11,4 +12,5 @@ public interface FolderService {
 
     void createEmptyFolder(FolderCreateRequest createRequest);
     void uploadFolder(FolderUploadRequest uploadRequest);
+    void deleteFolder(FolderDeleteRequest deleteRequest);
 }
