@@ -1,6 +1,7 @@
 package com.app.cloudfilestorage.controller;
 
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
+import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
@@ -50,6 +51,19 @@ public class FolderController {
             redirectAttributes.addFlashAttribute("successMessage", "Folder created successfully!");
         }
 
+        return new RedirectView(HOME_PAGE_URI);
+    }
+
+    @PostMapping("/delete")
+    public RedirectView deleteFolder(@ModelAttribute FolderDeleteRequest folderDeleteRequest,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, "Failed to delete request");
+        } else {
+            folderService.deleteFolder(folderDeleteRequest);
+            redirectAttributes.addFlashAttribute("successMessage", "Folder was deleted successfully");
+        }
         return new RedirectView(HOME_PAGE_URI);
     }
 }
