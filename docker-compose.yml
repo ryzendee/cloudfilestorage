@@ -18,8 +18,6 @@ services:
       - POSTGRES_DB=cloudstoragedb
     ports:
       - '5430:5432'
-    volumes:
-      - cloudstorage_postgres_data:/data/cloudstorage
 
 
   minio:
@@ -32,8 +30,7 @@ services:
     ports:
       - '9090:9090'
       - '9000:9000'
-    volumes:
-      - minio_data:/data
+
 
   redis:
     image: redis:7.2.4
@@ -43,5 +40,3 @@ services:
     environment:
       REDIS_HOST: localhost
       REDIS_PASSWORD: redispassword
-    volumes:
-      - redis_data:/var/lib/redis/data
