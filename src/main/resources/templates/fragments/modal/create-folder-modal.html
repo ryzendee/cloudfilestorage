@@ -7,11 +7,12 @@
                 <button aria-label="Close" class="btn-close" data-mdb-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="folderCreateForm" method="post" th:action="@{/folders}"
+                <form id="folderCreateForm" method="post" th:action="@{/folders/empty}"
                       th:object="${folderCreateRequest}">
                     <label class="form-label" for="folderCreateInput">Enter folder name</label>
-                    <input class="form-control" id="folderCreateInput" th:field="*{name}" type="text">
-                    <input th:field="*{ownerId}" th:value="${session.userSessionDto}" type="hidden"/>
+                    <input class="form-control" id="folderCreateInput" th:field="*{folderName}" type="text">
+                    <input th:field="*{ownerId}" type="hidden"/>
+                    <input th:field="*{currentFolderPath}" type="hidden"/>
                 </form>
             </div>
             <div class="modal-footer">

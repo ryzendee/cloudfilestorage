@@ -2,4 +2,9 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
+  liquibase:
+    enabled: false
+
+minio:
+  bucket: user-files

@@ -79,6 +79,27 @@
         <div class="col-md-9">
             <h3>Мой диск</h3>
             <div class="content mt-3">
+
+                <!--Breadcrumbs-->
+                <nav aria-label="breadcrumb" th:if="${breadcrumbDto}">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-decoration-none" th:href="@{'/'}">Main</a>
+                        </li>
+
+                        <li th:each="breadcrumbPath, iterStat : ${breadcrumbDto.getFolderPathsList()}"
+                            th:class="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
+
+                            <a
+                               th:href="@{'/?path=' + ${breadcrumbPath}}"
+                               th:text="${breadcrumbDto.getFolderNamesList().get(iterStat.index)}"
+                               class="text-decoration-none">
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
+
+                <!--User folders and files table-->
                 <table class="table">
                     <thead>
                     <tr>
@@ -95,7 +116,11 @@
                     <tr th:if="${foldersList}" th:each="folder : ${foldersList}">
                         <td>
                             <i class="bi bi-folder"></i>
-                            <span th:text="${folder.name}">No data</span>
+                            <a th:href="@{'/?path=' + ${folder.path}}"
+                               th:text="${folder.name}"
+                               class="text-decoration-none text-dark">
+                                No data
+                            </a>
                         </td>
                         <td>Я</td>
                         <td th:text="${formattedDate}">No data</td>
