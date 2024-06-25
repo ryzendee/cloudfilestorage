@@ -4,6 +4,7 @@ import com.app.cloudfilestorage.dto.BreadcrumbDto;
 import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
+import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
@@ -51,8 +52,11 @@ public class MainController {
             model.addAttribute("breadcrumbDto", breadcrumbDto);
         }
 
+        model.addAttribute("folderDeleteRequest", new FolderDeleteRequest(userSessionDto.id()));
+
         model.addAttribute("folderCreateRequest", new FolderCreateRequest(userSessionDto.id(), path));
         model.addAttribute("folderUploadRequest", new FolderUploadRequest(userSessionDto.id(),path));
+
         model.addAttribute("fileUploadRequest", new FileUploadRequest(userSessionDto.id(),path));
 
         return "main-view";
