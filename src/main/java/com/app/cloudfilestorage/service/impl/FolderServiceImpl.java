@@ -1,8 +1,12 @@
 package com.app.cloudfilestorage.service.impl;
 
+import com.app.cloudfilestorage.dto.MinioSaveDataDto;
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
+import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
+import com.app.cloudfilestorage.exception.MappingException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
+import com.app.cloudfilestorage.mapper.FolderUploadReqToMinioSaveDtoListMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFolderResponseMapper;
 import com.app.cloudfilestorage.models.MinioObject;
 import com.app.cloudfilestorage.repository.impl.MinioRepositoryImpl;
@@ -22,6 +26,7 @@ import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFold
 public class FolderServiceImpl implements FolderService {
     private final MinioRepositoryImpl minioRepository;
     private final MinioObjectToFolderResponseMapper minioObjectToFolderResponseMapper;
+    private final FolderUploadReqToMinioSaveDtoListMapper folderUploadReqToMinioSaveDtoListMapper;
     @Override
     public List<FolderResponse> getFoldersForPathByUserId(Long userId, String path) {
         try {
@@ -43,6 +48,18 @@ public class FolderServiceImpl implements FolderService {
             minioRepository.createEmptyFolder(folderPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to create empty folder", ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void uploadFolder(FolderUploadRequest uploadRequest) {
+        try {
+            List<MinioSaveDataDto> minioSaveDataDtoList = folderUploadReqToMinioSaveDtoListMapper.map(uploadRequest);
+            minioRepository.saveAll(minioSaveDataDtoList);
+            log.info("Deleted folder");
+        } catch (MappingException | MinioRepositoryException ex) {
+            log.warn("Failed to upload folder", ex);
             throw new RuntimeException(ex);
         }
     }
