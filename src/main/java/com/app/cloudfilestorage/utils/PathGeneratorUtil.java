@@ -4,7 +4,7 @@ public final class PathGeneratorUtil {
     private static final String DEFAULT_PATH = "/";
     private static final String TEMPLATE = "user-%d-files/";
 
-    public static String formatPathForFolder(Long userId, String path) {
+    public static String formatPath(Long userId, String path) {
         if (path.equals(DEFAULT_PATH) || path.isEmpty()) {
             return TEMPLATE.formatted(userId);
         }

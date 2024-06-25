@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
+import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFolder;
 
 @Service
 @Slf4j
@@ -38,7 +39,7 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void createEmptyFolder(FolderCreateRequest createRequest) {
         try {
-            String folderPath = formatPath(createRequest.getOwnerId(), createRequest.getCurrentFolderPath(), createRequest.getFolderName());
+            String folderPath = formatPathForFolder(createRequest.getOwnerId(), createRequest.getCurrentFolderPath(), createRequest.getFolderName());
             minioRepository.createEmptyFolder(folderPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to create empty folder", ex);
