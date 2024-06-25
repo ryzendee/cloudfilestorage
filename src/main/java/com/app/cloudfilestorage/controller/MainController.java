@@ -1,5 +1,6 @@
 package com.app.cloudfilestorage.controller;
 
+import com.app.cloudfilestorage.dto.BreadcrumbDto;
 import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
@@ -18,12 +19,15 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
 
+import static com.app.cloudfilestorage.utils.BreadcrumbUtil.getBreadcrumb;
+
 
 @Controller("/")
 @Slf4j
 @RequiredArgsConstructor
 public class MainController {
 
+    //
     private static final String SEPARATOR = "/";
     private final FolderService folderService;
     private final FileService fileService;
@@ -32,18 +36,25 @@ public class MainController {
     public String getMainView(@SessionAttribute UserSessionDto userSessionDto,
                               @RequestParam(defaultValue = SEPARATOR) String path,
                               Model model) {
+        if (!path.endsWith(SEPARATOR)) {
+            path += SEPARATOR;
+        }
 
-        List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(userSessionDto.userId(), path);
-        List<FileResponse> fileDtoList = fileService.getFilesForPathByUserId(userSessionDto.userId(), path);
-
+        List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(userSessionDto.id(), path);
+        List<FileResponse> fileDtoList = fileService.getFilesForPathByUserId(userSessionDto.id(), path);
         model.addAttribute("foldersList", folderDtoList);
         model.addAttribute("filesList", fileDtoList);
 
-        model.addAttribute("folderCreateRequest", new FolderCreateRequest());
-        model.addAttribute("folderUploadRequest", new FolderUploadRequest());
-        model.addAttribute("fileUploadRequest", new FileUploadRequest());
+        //We don't need breadcrumbs at the default path
+        if (!path.equals(SEPARATOR)) {
+            BreadcrumbDto breadcrumbDto = getBreadcrumb(path);
+            model.addAttribute("breadcrumbDto", breadcrumbDto);
+        }
+
+        model.addAttribute("folderCreateRequest", new FolderCreateRequest(userSessionDto.id(), path));
+        model.addAttribute("folderUploadRequest", new FolderUploadRequest(userSessionDto.id(),path));
+        model.addAttribute("fileUploadRequest", new FileUploadRequest(userSessionDto.id(),path));
 
         return "main-view";
     }
-
 }
