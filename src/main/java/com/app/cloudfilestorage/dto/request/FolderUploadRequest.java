@@ -14,8 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FolderUploadRequest {
-    private String currentFolder;
+    private String currentFolderPath;
     @Size(min = 1, message = "Folder must contains at least 1 file")
     private List<MultipartFile> files;
     private Long ownerId;
+
+    public FolderUploadRequest(Long ownerId, String currentFolderPath) {
+        this.ownerId = ownerId;
+        this.currentFolderPath = currentFolderPath;
+    }
 }

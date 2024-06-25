@@ -12,4 +12,9 @@ public class FileUploadRequest {
     private String currentFolderPath;
     private MultipartFile file;
     private Long ownerId;
+
+    public FileUploadRequest(Long ownerId, String currentFolderPath) {
+        this.ownerId = ownerId;
+        this.currentFolderPath = currentFolderPath;
+    }
 }

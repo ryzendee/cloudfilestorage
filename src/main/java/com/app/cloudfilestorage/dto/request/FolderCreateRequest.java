@@ -1,17 +1,20 @@
 package com.app.cloudfilestorage.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class FolderCreateRequest {
-    private String currentFolder;
-    private String name;
+    private String currentFolderPath;
+    private String folderName;
     private Long ownerId;
+
+    public FolderCreateRequest(Long ownerId, String currentFolderPath) {
+        this.ownerId = ownerId;
+        this.currentFolderPath = currentFolderPath;
+    }
 }
 
