@@ -1,25 +1,19 @@
 package com.app.cloudfilestorage.service.impl;
 
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
-import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
-import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.MinioObjectToFolderResponseMapper;
 import com.app.cloudfilestorage.models.MinioObject;
-import com.app.cloudfilestorage.dto.MinioSaveDataDto;
 import com.app.cloudfilestorage.repository.impl.MinioRepositoryImpl;
 import com.app.cloudfilestorage.service.FolderService;
-import com.app.cloudfilestorage.utils.PathGeneratorUtil;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
 
 @Service
 @Slf4j
@@ -30,13 +24,24 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public List<FolderResponse> getFoldersForPathByUserId(Long userId, String path) {
         try {
-            String formattedPath = PathGeneratorUtil.formatPath(userId, path);
+            String formattedPath = formatPath(userId, path);
             return minioRepository.findAll(formattedPath).stream()
                     .filter(MinioObject::isDir)
                     .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
                     .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find folders for path: {}", path);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void createEmptyFolder(FolderCreateRequest createRequest) {
+        try {
+            String folderPath = formatPath(createRequest.getOwnerId(), createRequest.getCurrentFolderPath(), createRequest.getFolderName());
+            minioRepository.createEmptyFolder(folderPath);
+        } catch (MinioRepositoryException ex) {
+            log.warn("Failed to create empty folder", ex);
             throw new RuntimeException(ex);
         }
     }
