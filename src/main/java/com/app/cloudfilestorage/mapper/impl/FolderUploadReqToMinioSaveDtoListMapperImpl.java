@@ -17,9 +17,9 @@ import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
 public class FolderUploadReqToMinioSaveDtoListMapperImpl implements FolderUploadReqToMinioSaveDtoListMapper {
 
     @Override
-    public List<MinioSaveDataDto> map(FolderUploadRequest from) {
+    public List<MinioSaveDataDto> map(Long userId, FolderUploadRequest from) {
         try {
-            String basePath = formatPath(from.getOwnerId(), from.getCurrentFolderPath());
+            String basePath = formatPath(userId, from.getCurrentFolderPath());
 
             List<MinioSaveDataDto> minioSaveDataDtoList = new ArrayList<>();
             for (MultipartFile file : from.getFiles()) {

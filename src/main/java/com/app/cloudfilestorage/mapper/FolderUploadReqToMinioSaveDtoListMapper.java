@@ -5,6 +5,8 @@ import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 
 import java.util.List;
 
-public interface FolderUploadReqToMinioSaveDtoListMapper extends BaseMapper<FolderUploadRequest, List<MinioSaveDataDto>> {
+public interface FolderUploadReqToMinioSaveDtoListMapper {
+
+    List<MinioSaveDataDto> map(Long userId, FolderUploadRequest from);
 
 }
