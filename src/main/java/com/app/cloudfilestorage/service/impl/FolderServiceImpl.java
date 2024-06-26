@@ -46,9 +46,9 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void createEmptyFolder(FolderCreateRequest createRequest) {
+    public void createEmptyFolder(Long userId, FolderCreateRequest createRequest) {
         try {
-            String folderPath = formatPathForFolder(createRequest.getOwnerId(), createRequest.getCurrentFolderPath(), createRequest.getFolderName());
+            String folderPath = formatPathForFolder(userId, createRequest.getCurrentFolderPath(), createRequest.getFolderName());
             minioRepository.createEmptyFolder(folderPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to create empty folder", ex);
@@ -57,9 +57,9 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void uploadFolder(FolderUploadRequest uploadRequest) {
+    public void uploadFolder(Long userId, FolderUploadRequest uploadRequest) {
         try {
-            List<MinioSaveDataDto> minioSaveDataDtoList = folderUploadReqToMinioSaveDtoListMapper.map(uploadRequest);
+            List<MinioSaveDataDto> minioSaveDataDtoList = folderUploadReqToMinioSaveDtoListMapper.map(userId, uploadRequest);
             minioRepository.saveAll(minioSaveDataDtoList);
         } catch (MappingException | MinioRepositoryException ex) {
             log.warn("Failed to upload folder", ex);
@@ -68,9 +68,9 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void deleteFolder(FolderDeleteRequest deleteRequest) {
+    public void deleteFolder(Long userId, FolderDeleteRequest deleteRequest) {
         try {
-            String formattedPath = formatPath(deleteRequest.getOwnerId(), deleteRequest.getFolderPath());
+            String formattedPath = formatPath(userId, deleteRequest.getFolderPath());
             minioRepository.deleteAllRecursive(formattedPath);
         } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
@@ -78,9 +78,9 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public Resource downloadFolder(FolderDownloadRequest downloadRequest) {
+    public Resource downloadFolder(Long userId, FolderDownloadRequest downloadRequest) {
         try {
-            String formattedPath = formatPath(downloadRequest.getOwnerId(), downloadRequest.getFolderPath());
+            String formattedPath = formatPath(userId, downloadRequest.getFolderPath());
             byte[] folder =  minioRepository.downloadByPathAll(formattedPath, downloadRequest.getName());
             return new ByteArrayResource(folder);
         } catch (MinioRepositoryException ex) {

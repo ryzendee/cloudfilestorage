@@ -49,13 +49,13 @@ public class MainController {
             model.addAttribute("breadcrumbDto", breadcrumbDto);
         }
 
-        model.addAttribute("folderDeleteRequest", new FolderDeleteRequest(userSessionDto.id()));
-        model.addAttribute("folderDownloadRequest", new FolderDownloadRequest(userSessionDto.id()));
+        model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
+        model.addAttribute("folderDownloadRequest", new FolderDownloadRequest());
 
-        model.addAttribute("folderCreateRequest", new FolderCreateRequest(userSessionDto.id(), path));
-        model.addAttribute("folderUploadRequest", new FolderUploadRequest(userSessionDto.id(),path));
+        model.addAttribute("folderCreateRequest", new FolderCreateRequest(path));
+        model.addAttribute("folderUploadRequest", new FolderUploadRequest(path));
 
-        model.addAttribute("fileUploadRequest", new FileUploadRequest(userSessionDto.id(),path));
+        model.addAttribute("fileUploadRequest", new FileUploadRequest(path));
 
         return "main-view";
     }

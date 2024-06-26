@@ -10,12 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FolderDownloadRequest {
-
-    private Long ownerId;
     private String name;
     private String folderPath;
 
-    public FolderDownloadRequest(Long ownerId) {
-        this.ownerId = ownerId;
-    }
 }

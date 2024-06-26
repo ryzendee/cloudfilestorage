@@ -40,7 +40,7 @@ public class FolderController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.uploadFolder(folderUploadRequest);
+            folderService.uploadFolder(userSessionDto.id(), folderUploadRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Folder created successfully!");
         }
 
@@ -56,7 +56,7 @@ public class FolderController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.createEmptyFolder(folderCreateRequest);
+            folderService.createEmptyFolder(userSessionDto.id(), folderCreateRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Folder created successfully!");
         }
 
@@ -71,7 +71,7 @@ public class FolderController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, "Failed to delete request");
         } else {
-            folderService.deleteFolder(folderDeleteRequest);
+            folderService.deleteFolder(userSessionDto.id(), folderDeleteRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Folder was deleted successfully");
         }
         return new RedirectView(HOME_PAGE_URI);
@@ -87,7 +87,7 @@ public class FolderController {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, "Failed to rename folder");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            Resource folderResource = folderService.downloadFolder(folderDownloadRequest);
+            Resource folderResource = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
                     .body(folderResource);

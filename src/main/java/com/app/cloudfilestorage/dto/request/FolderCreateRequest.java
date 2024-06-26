@@ -10,10 +10,8 @@ import lombok.*;
 public class FolderCreateRequest {
     private String currentFolderPath;
     private String folderName;
-    private Long ownerId;
 
-    public FolderCreateRequest(Long ownerId, String currentFolderPath) {
-        this.ownerId = ownerId;
+    public FolderCreateRequest(String currentFolderPath) {
         this.currentFolderPath = currentFolderPath;
     }
 }

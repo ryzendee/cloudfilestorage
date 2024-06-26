@@ -12,8 +12,8 @@ import java.util.List;
 public interface FolderService {
     List<FolderResponse> getFoldersForPathByUserId(Long userId, String path);
 
-    void createEmptyFolder(FolderCreateRequest createRequest);
-    void uploadFolder(FolderUploadRequest uploadRequest);
-    void deleteFolder(FolderDeleteRequest deleteRequest);
-    Resource downloadFolder(FolderDownloadRequest folderDownloadRequest);
+    void createEmptyFolder(Long userId, FolderCreateRequest createRequest);
+    void uploadFolder(Long userId, FolderUploadRequest uploadRequest);
+    void deleteFolder(Long userId, FolderDeleteRequest deleteRequest);
+    Resource downloadFolder(Long userId, FolderDownloadRequest folderDownloadRequest);
 }
