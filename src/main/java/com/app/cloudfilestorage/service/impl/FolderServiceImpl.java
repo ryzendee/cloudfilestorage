@@ -3,6 +3,7 @@ package com.app.cloudfilestorage.service.impl;
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
 import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
 import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
+import com.app.cloudfilestorage.dto.request.FolderDownloadRequest;
 import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.exception.MappingException;
@@ -14,6 +15,8 @@ import com.app.cloudfilestorage.repository.impl.MinioRepositoryImpl;
 import com.app.cloudfilestorage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +72,17 @@ public class FolderServiceImpl implements FolderService {
         try {
             String formattedPath = formatPath(deleteRequest.getOwnerId(), deleteRequest.getFolderPath());
             minioRepository.deleteAllRecursive(formattedPath);
+        } catch (MinioRepositoryException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public Resource downloadFolder(FolderDownloadRequest downloadRequest) {
+        try {
+            String formattedPath = formatPath(downloadRequest.getOwnerId(), downloadRequest.getFolderPath());
+            byte[] folder =  minioRepository.downloadByPathAll(formattedPath, downloadRequest.getName());
+            return new ByteArrayResource(folder);
         } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
         }

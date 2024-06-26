@@ -32,4 +32,6 @@ public final class PathGeneratorUtil {
         String pathToRemove = TEMPLATE.formatted(userId);
         return path.replace(pathToRemove, "");
     }
+
+
 }
