@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,13 +80,13 @@ public class FolderController {
 
 
     @PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> downloadFolder(@Valid @ModelAttribute FolderDownloadRequest folderDownloadRequest,
+    public Object downloadFolder(@Valid @ModelAttribute FolderDownloadRequest folderDownloadRequest,
                                                    @SessionAttribute UserSessionDto userSessionDto,
                                                    BindingResult bindingResult,
                                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new RedirectView(HOME_PAGE_URI);
         } else {
             Resource folderResource = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);
             return ResponseEntity.ok()
