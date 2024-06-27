@@ -136,7 +136,6 @@
                                         <form method="post" th:action="@{/folders/download}" th:object="${folderDownloadRequest}">
                                             <input name="folderPath" th:value="${folder.path}" type="hidden"/>
                                             <input name="name" th:value="${folder.name}" type="hidden"/>
-                                            <input th:field="*{ownerId}" type="hidden"/>
                                             <button type="submit" class="dropdown-item">
                                                 <i class="bi bi-download"></i> Скачать
                                             </button>
@@ -145,7 +144,6 @@
                                     <li>
                                         <form method="post" th:action="@{/folders/delete}" th:object="${folderDeleteRequest}">
                                             <input name="folderPath" th:value="${folder.path}" type="hidden"/>
-                                            <input th:field="*{ownerId}" type="hidden"/>
                                             <button type="submit" class="dropdown-item">
                                                 <i class="bi bi-trash"></i> Удалить
                                             </button>
