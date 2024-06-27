@@ -81,9 +81,9 @@ public class FolderController {
 
     @PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Object downloadFolder(@Valid @ModelAttribute FolderDownloadRequest folderDownloadRequest,
-                                                   @SessionAttribute UserSessionDto userSessionDto,
-                                                   BindingResult bindingResult,
-                                                   RedirectAttributes redirectAttributes) {
+                                 BindingResult bindingResult,
+                                 @SessionAttribute UserSessionDto userSessionDto,
+                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
