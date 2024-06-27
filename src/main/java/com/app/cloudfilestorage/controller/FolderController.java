@@ -36,8 +36,8 @@ public class FolderController {
 
     @PostMapping("/upload")
     public RedirectView uploadFolder(@Valid @ModelAttribute FolderUploadRequest folderUploadRequest,
-                                     @SessionAttribute UserSessionDto userSessionDto,
                                      BindingResult bindingResult,
+                                     @SessionAttribute UserSessionDto userSessionDto,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
@@ -51,8 +51,8 @@ public class FolderController {
 
     @PostMapping("/empty")
     public RedirectView createEmptyFolder(@Valid @ModelAttribute FolderCreateRequest folderCreateRequest,
-                                          @SessionAttribute UserSessionDto userSessionDto,
                                           BindingResult bindingResult,
+                                          @SessionAttribute UserSessionDto userSessionDto,
                                           RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
@@ -67,8 +67,8 @@ public class FolderController {
 
     @PostMapping("/delete")
     public RedirectView deleteFolder(@Valid @ModelAttribute FolderDeleteRequest folderDeleteRequest,
-                                     @SessionAttribute UserSessionDto userSessionDto,
                                      BindingResult bindingResult,
+                                     @SessionAttribute UserSessionDto userSessionDto,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
