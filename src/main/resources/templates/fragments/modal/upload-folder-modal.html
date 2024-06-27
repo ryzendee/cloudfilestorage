@@ -7,7 +7,7 @@
                         <button aria-label="Close" class="btn-close" data-mdb-dismiss="modal" type="button"></button>
                     </div>
                     <div class="modal-body">
-                        <form enctype="multipart/form-data" id="folderUploadForm" method="post" th:action="@{/folders}"
+                        <form enctype="multipart/form-data" id="folderUploadForm" method="post" th:action="@{/folders/upload}"
                               th:object="${folderUploadRequest}">
                             <label class="form-label" for="folderUploadInput">Select folder</label>
                             <input class="form-control" id="folderUploadInput" th:field="*{files}" type="file" webkitdirectory/>

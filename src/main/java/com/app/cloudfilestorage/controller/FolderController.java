@@ -32,7 +32,7 @@ public class FolderController {
     private static final String VALIDATION_ERROR_MESSAGE = "validationErrorMessage";
     private final FolderService folderService;
 
-    @PostMapping()
+    @PostMapping("/upload")
     public RedirectView uploadFolder(@Valid @ModelAttribute FolderUploadRequest folderUploadRequest,
                                      @SessionAttribute UserSessionDto userSessionDto,
                                      BindingResult bindingResult,
