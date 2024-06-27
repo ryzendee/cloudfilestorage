@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FolderDeleteRequest {
-    @NotBlank(message = "Folder path must not be blank or null")
+    @NotBlank(message = "Folder path must not be blank")
     private String folderPath;
 
 }

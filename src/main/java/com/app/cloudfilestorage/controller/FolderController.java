@@ -8,6 +8,7 @@ import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import static com.app.cloudfilestorage.utils.BindingResultResolver.getFirstMessa
 
 @Controller
 @RequestMapping("/folders")
+@Slf4j
 @RequiredArgsConstructor
 public class FolderController {
     private static final String HOME_PAGE_URI = "/";
@@ -64,12 +66,12 @@ public class FolderController {
     }
 
     @PostMapping("/delete")
-    public RedirectView deleteFolder(@ModelAttribute FolderDeleteRequest folderDeleteRequest,
+    public RedirectView deleteFolder(@Valid @ModelAttribute FolderDeleteRequest folderDeleteRequest,
                                      @SessionAttribute UserSessionDto userSessionDto,
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, "Failed to delete request");
+            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             folderService.deleteFolder(userSessionDto.id(), folderDeleteRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Folder was deleted successfully");
@@ -79,12 +81,12 @@ public class FolderController {
 
 
     @PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> downloadFolder(@ModelAttribute FolderDownloadRequest folderDownloadRequest,
+    public ResponseEntity<Resource> downloadFolder(@Valid @ModelAttribute FolderDownloadRequest folderDownloadRequest,
                                                    @SessionAttribute UserSessionDto userSessionDto,
                                                    BindingResult bindingResult,
                                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, "Failed to rename folder");
+            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             Resource folderResource = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);

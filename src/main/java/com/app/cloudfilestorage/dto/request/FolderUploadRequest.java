@@ -1,5 +1,6 @@
 package com.app.cloudfilestorage.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FolderUploadRequest {
+
+    @NotBlank(message = "Current folder path must not be blank")
     private String currentFolderPath;
     @Size(min = 1, message = "Folder must contains at least 1 file")
     private List<MultipartFile> files;
