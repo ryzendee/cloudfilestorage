@@ -1,0 +1,26 @@
+<div aria-hidden="true" class="modal fade" tabindex="-1" id="folderRenameModal"
+     th:fragment="folder-rename-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Rename</h5>
+                <button aria-label="Close" class="btn-close" data-mdb-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="folderRenameForm" th:action="@{/folders/rename}" th:method="post" th:object="${folderRenameRequest}">
+                    <div class="form-outline">
+                        <input id="updatedName" class="form-control" th:field="*{updatedName}" type="text">
+                    </div>
+                    <input id="currentName" th:field="*{currentName}" type="hidden">
+                    <input id="path" th:field="*{path}" type="hidden">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-mdb-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" form="folderRenameForm" type="submit">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
