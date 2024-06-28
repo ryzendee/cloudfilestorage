@@ -51,6 +51,7 @@ public class MainController {
 
         model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
         model.addAttribute("folderDownloadRequest", new FolderDownloadRequest());
+        model.addAttribute("folderRenameRequest", new FolderRenameRequest());
 
         model.addAttribute("folderCreateRequest", new FolderCreateRequest(path));
         model.addAttribute("folderUploadRequest", new FolderUploadRequest(path));

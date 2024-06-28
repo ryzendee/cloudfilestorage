@@ -1,10 +1,7 @@
 package com.app.cloudfilestorage.controller;
 
 import com.app.cloudfilestorage.dto.UserSessionDto;
-import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
-import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
-import com.app.cloudfilestorage.dto.request.FolderDownloadRequest;
-import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
+import com.app.cloudfilestorage.dto.request.*;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +72,7 @@ public class FolderController {
             folderService.deleteFolder(userSessionDto.id(), folderDeleteRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Folder was deleted successfully");
         }
+
         return new RedirectView(HOME_PAGE_URI);
     }
 
@@ -93,5 +91,20 @@ public class FolderController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
                     .body(folderResource);
         }
+    }
+
+    @PostMapping("/rename")
+    public RedirectView renameFolder(@Valid @ModelAttribute FolderRenameRequest folderRenameRequest,
+                                     BindingResult bindingResult,
+                                     @SessionAttribute UserSessionDto userSessionDto,
+                                     RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute(VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+        } else {
+            folderService.renameFolder(userSessionDto.id(), folderRenameRequest);
+            redirectAttributes.addAttribute("successMessage", "Folder was renamed successfully");
+        }
+
+        return new RedirectView(HOME_PAGE_URI);
     }
 }

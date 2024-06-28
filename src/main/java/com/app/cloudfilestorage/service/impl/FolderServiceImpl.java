@@ -1,10 +1,7 @@
 package com.app.cloudfilestorage.service.impl;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
-import com.app.cloudfilestorage.dto.request.FolderCreateRequest;
-import com.app.cloudfilestorage.dto.request.FolderDeleteRequest;
-import com.app.cloudfilestorage.dto.request.FolderDownloadRequest;
-import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
+import com.app.cloudfilestorage.dto.request.*;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.exception.MappingException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
@@ -85,6 +82,18 @@ public class FolderServiceImpl implements FolderService {
             return new ByteArrayResource(folder);
         } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void renameFolder(Long userId, FolderRenameRequest renameRequest) {
+        try {
+            String updatedPath = renameRequest.getPath().replaceFirst(renameRequest.getCurrentName(), renameRequest.getUpdatedName());
+            updatedPath = formatPath(userId, updatedPath);
+            String oldPath = formatPath(userId, renameRequest.getPath());
+            minioRepository.renameAllRecursive(oldPath, updatedPath);
+        } catch (MinioRepositoryException ex) {
+            throw new MinioRepositoryException(ex);
         }
     }
 }
