@@ -77,6 +77,7 @@ public class MinioRepositoryImpl implements MinioRepository {
         );
     }
 
+    @Override
     public byte[] downloadByPathAll(String path, String folderName) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
