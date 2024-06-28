@@ -8,7 +8,7 @@ import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.FolderUploadReqToMinioSaveDtoListMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFolderResponseMapper;
 import com.app.cloudfilestorage.models.MinioObject;
-import com.app.cloudfilestorage.repository.impl.MinioRepositoryImpl;
+import com.app.cloudfilestorage.repository.MinioRepository;
 import com.app.cloudfilestorage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFold
 @Slf4j
 @RequiredArgsConstructor
 public class FolderServiceImpl implements FolderService {
-    private final MinioRepositoryImpl minioRepository;
+    private final MinioRepository minioRepository;
     private final MinioObjectToFolderResponseMapper minioObjectToFolderResponseMapper;
     private final FolderUploadReqToMinioSaveDtoListMapper folderUploadReqToMinioSaveDtoListMapper;
     @Override
