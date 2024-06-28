@@ -1,5 +1,7 @@
 package com.app.cloudfilestorage.utils;
 
+import com.app.cloudfilestorage.dto.request.FolderRenameRequest;
+
 public final class PathGeneratorUtil {
     private static final String DEFAULT_PATH = "/";
     private static final String TEMPLATE = "user-%d-files/";
@@ -33,5 +35,8 @@ public final class PathGeneratorUtil {
         return path.replace(pathToRemove, "");
     }
 
-
+    public static String updateAndFormatFolderPath(Long userId, FolderRenameRequest renameRequest) {
+        String updatedPath = renameRequest.getPath().replaceFirst(renameRequest.getCurrentName(), renameRequest.getUpdatedName());
+        return formatPath(userId, updatedPath);
+    }
 }

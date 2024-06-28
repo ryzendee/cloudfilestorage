@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFolder;
+import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
 
 @Service
 @Slf4j
@@ -88,8 +87,7 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void renameFolder(Long userId, FolderRenameRequest renameRequest) {
         try {
-            String updatedPath = renameRequest.getPath().replaceFirst(renameRequest.getCurrentName(), renameRequest.getUpdatedName());
-            updatedPath = formatPath(userId, updatedPath);
+            String updatedPath = updateAndFormatFolderPath(userId, renameRequest);
             String oldPath = formatPath(userId, renameRequest.getPath());
             minioRepository.renameAllRecursive(oldPath, updatedPath);
         } catch (MinioRepositoryException ex) {
