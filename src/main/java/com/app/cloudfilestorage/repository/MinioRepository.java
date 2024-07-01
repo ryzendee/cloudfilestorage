@@ -16,5 +16,5 @@ public interface MinioRepository {
     void moveAllRecursive(String from, String to);
     List<MinioObject> findAll(String path);
     InputStream downloadByPath(String path);
-    byte[] downloadByPathAll(String path, String folderName);
+    byte[] downloadByPathAll(String path);
 }

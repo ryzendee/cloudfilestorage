@@ -78,7 +78,7 @@ public class MinioRepositoryImpl implements MinioRepository {
     }
 
     @Override
-    public byte[] downloadByPathAll(String path, String folderName) {
+    public byte[] downloadByPathAll(String path) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (ZipOutputStream zos = new ZipOutputStream(baos)) {
@@ -87,7 +87,7 @@ public class MinioRepositoryImpl implements MinioRepository {
             for (Item item : itemList) {
                 try (InputStream objectStream = getObject(item.objectName())) {
                     //Need to avoid root folders
-                    String objectName = item.objectName().replaceAll(path, folderName + "/");
+                    String objectName = item.objectName().replaceAll(path,  "");
                     zos.putNextEntry(new ZipEntry(objectName));
 
                     byte[] buffer = new byte[1024];

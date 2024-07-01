@@ -77,7 +77,7 @@ public class FolderServiceImpl implements FolderService {
     public Resource downloadFolder(Long userId, FolderDownloadRequest downloadRequest) {
         try {
             String formattedPath = formatPath(userId, downloadRequest.getFolderPath());
-            byte[] folder =  minioRepository.downloadByPathAll(formattedPath, downloadRequest.getName());
+            byte[] folder =  minioRepository.downloadByPathAll(formattedPath);
             return new ByteArrayResource(folder);
         } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
@@ -87,7 +87,7 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void renameFolder(Long userId, FolderRenameRequest renameRequest) {
         try {
-            String updatedPath = updateAndFormatFolderPath(userId, renameRequest);
+            String updatedPath = updateFolderPath(userId, renameRequest);
             String oldPath = formatPath(userId, renameRequest.getPath());
             minioRepository.renameAllRecursive(oldPath, updatedPath);
         } catch (MinioRepositoryException ex) {
