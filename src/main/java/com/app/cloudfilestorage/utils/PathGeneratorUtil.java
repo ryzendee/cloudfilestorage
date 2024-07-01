@@ -35,8 +35,7 @@ public final class PathGeneratorUtil {
         return path.replace(pathToRemove, "");
     }
 
-    public static String updateAndFormatFolderPath(Long userId, FolderRenameRequest renameRequest) {
-        String updatedPath = renameRequest.getPath().replaceFirst(renameRequest.getCurrentName(), renameRequest.getUpdatedName());
-        return formatPath(userId, updatedPath);
+    public static String updateFolderPath(Long userId, FolderRenameRequest renameRequest) {
+        return renameRequest.getPath().replaceFirst(renameRequest.getCurrentName(), renameRequest.getUpdatedName());
     }
 }
