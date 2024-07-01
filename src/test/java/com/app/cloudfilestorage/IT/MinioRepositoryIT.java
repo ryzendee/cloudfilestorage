@@ -194,7 +194,7 @@ public class MinioRepositoryIT {
         List<MultipartFile> files = List.of(firstMockFile, secondMockFile);
         putListOfFiles(files);
 
-        byte[] bytes = minioRepository.downloadByPathAll(BASE_PATH, "folder");
+        byte[] bytes = minioRepository.downloadByPathAll(BASE_PATH);
         assertThat(bytes.length).isGreaterThan(0);
 
         try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(bytes))) {
