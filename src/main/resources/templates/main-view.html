@@ -173,14 +173,25 @@
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-link dropdown-toggle" type="button"
-                                        id="dropdownFileMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                        id="dropdownFileMenuButton" data-bs-toggle="dropdown"
+                                        aria-expanded="false"></button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownFileMenuButton">
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-download"></i>Скачать</a>
+                                    <li>
+                                        <form method="post" th:action="@{/files/download}" th:object="${fileDownloadRequest}">
+                                            <input name="path" th:value="${file.path}" type="hidden"/>
+                                            <input name="name" th:value="${file.name}" type="hidden"/>
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="bi bi-download"></i> Скачать
+                                            </button>
+                                        </form>
                                     </li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Переименовать</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Удалить</a>
+                                    <li>
+                                        <form method="post" th:action="@{/files/delete}" th:object="${fileDeleteRequest}">
+                                            <input name="path" th:value="${file.path}" type="hidden"/>
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="bi bi-trash"></i> Удалить
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
