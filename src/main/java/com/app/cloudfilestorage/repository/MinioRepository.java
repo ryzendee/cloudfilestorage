@@ -13,7 +13,7 @@ public interface MinioRepository {
     void saveAll(List<MinioSaveDataDto> minioSaveDataDtoList);
     void deleteAllRecursive(String path);
     void renameAllRecursive(String oldPath, String newPath);
-    void moveAllRecursive(String from, String to);
+    void deleteByPath(String path);
     List<MinioObject> findAll(String path);
     InputStream downloadByPath(String path);
     byte[] downloadByPathAll(String path);

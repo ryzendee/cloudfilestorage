@@ -164,19 +164,14 @@ public class MinioRepositoryImpl implements MinioRepository {
     }
 
     @Override
-    public void moveAllRecursive(String source, String target) {
+    public void deleteByPath(String path) {
         try {
-
-            List<Item> itemList = findAll(source, RECURSIVE);
-
-            for (Item item : itemList) {
-                String oldName = item.objectName();
-                String newName = target + oldName.substring(source.length());
-                copy(oldName, newName);
-                removeObject(oldName);
-            }
-
-
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(minioProperties.bucket())
+                            .object(path)
+                            .build()
+            );
         } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {
             throw new MinioRepositoryException(ex);
         }
