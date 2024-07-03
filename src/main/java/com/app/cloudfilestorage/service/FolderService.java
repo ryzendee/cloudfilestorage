@@ -2,8 +2,8 @@ package com.app.cloudfilestorage.service;
 
 import com.app.cloudfilestorage.dto.request.*;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
-import org.springframework.core.io.Resource;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public interface FolderService {
@@ -12,6 +12,6 @@ public interface FolderService {
     void createEmptyFolder(Long userId, FolderCreateRequest createRequest);
     void uploadFolder(Long userId, FolderUploadRequest uploadRequest);
     void deleteFolder(Long userId, FolderDeleteRequest deleteRequest);
-    Resource downloadFolder(Long userId, FolderDownloadRequest folderDownloadRequest);
+    ByteArrayOutputStream downloadFolder(Long userId, FolderDownloadRequest folderDownloadRequest);
     void renameFolder(Long userId, FolderRenameRequest renameRequest);
 }

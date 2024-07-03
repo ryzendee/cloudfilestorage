@@ -8,7 +8,7 @@ import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.FileUploadRequestToMinioSaveDataMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFileResponseMapper;
-import com.app.cloudfilestorage.repository.MinioRepository;
+import com.app.cloudfilestorage.repository.MinioFileRepository;
 import com.app.cloudfilestorage.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-    private final MinioRepository minioRepository;
+    private final MinioFileRepository minioFileRepository;
     private final MinioObjectToFileResponseMapper minioObjectToFileResponseMapper;
     private final FileUploadRequestToMinioSaveDataMapper minioSaveDataMapper;
 
@@ -36,8 +36,7 @@ public class FileServiceImpl implements FileService {
         String formattedPath = formatPath(userId, path);
 
         try {
-            return minioRepository.findAll(formattedPath).stream()
-                    .filter(minioObj -> !minioObj.isDir())
+            return minioFileRepository.findAllFilesByPath(formattedPath).stream()
                     .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
                     .toList();
         } catch (MinioRepositoryException ex) {
@@ -51,7 +50,7 @@ public class FileServiceImpl implements FileService {
         try {
             String basePath = formatPath(userId, uploadRequest.getCurrentFolderPath());
             MinioSaveDataDto minioSaveDataDto = minioSaveDataMapper.map(basePath, uploadRequest);
-            minioRepository.saveObject(minioSaveDataDto);
+            minioFileRepository.saveFile(minioSaveDataDto);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to upload file", ex);
             throw new RuntimeException(ex);
@@ -62,7 +61,7 @@ public class FileServiceImpl implements FileService {
     public void deleteFile(Long userId, FileDeleteRequest deleteRequest) {
         try {
             String formattedPath = formatPath(userId, deleteRequest.getPath());
-            minioRepository.deleteByPath(formattedPath);
+            minioFileRepository.deleteFileByObjectName(formattedPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to delete file", ex);
             throw new RuntimeException(ex);
@@ -73,8 +72,11 @@ public class FileServiceImpl implements FileService {
     public Resource downloadFile(Long userId, FileDownloadRequest downloadRequest) {
         try {
             String formattedPath = formatPath(userId, downloadRequest.getPath());
-            InputStream inputStream = minioRepository.downloadByPath(formattedPath);
-            return new ByteArrayResource(inputStream.readAllBytes());
+
+            try (InputStream inputStream = minioFileRepository.downloadFileByObjectName(formattedPath)) {
+                return new ByteArrayResource(inputStream.readAllBytes());
+            }
+
         } catch (MinioRepositoryException | IOException ex) {
             log.warn("Failed to download file", ex);
             throw new RuntimeException(ex);

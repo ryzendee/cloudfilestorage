@@ -6,6 +6,7 @@ import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.ByteArrayOutputStream;
 
 import static com.app.cloudfilestorage.utils.BindingResultResolver.getFirstMessage;
 
@@ -87,7 +90,8 @@ public class FolderController {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
         } else {
-            Resource folderResource = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);
+            ByteArrayOutputStream baos = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);
+            Resource folderResource = new ByteArrayResource(baos.toByteArray());
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
                     .body(folderResource);

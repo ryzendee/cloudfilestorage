@@ -7,15 +7,13 @@ import com.app.cloudfilestorage.exception.MappingException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.FolderUploadReqToMinioSaveDtoListMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFolderResponseMapper;
-import com.app.cloudfilestorage.models.MinioObject;
-import com.app.cloudfilestorage.repository.MinioRepository;
+import com.app.cloudfilestorage.repository.MinioFolderRepository;
 import com.app.cloudfilestorage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
@@ -24,15 +22,15 @@ import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
 @Slf4j
 @RequiredArgsConstructor
 public class FolderServiceImpl implements FolderService {
-    private final MinioRepository minioRepository;
+    private final MinioFolderRepository minioFolderRepository;
     private final MinioObjectToFolderResponseMapper minioObjectToFolderResponseMapper;
     private final FolderUploadReqToMinioSaveDtoListMapper folderUploadReqToMinioSaveDtoListMapper;
+
     @Override
     public List<FolderResponse> getFoldersForPathByUserId(Long userId, String path) {
         try {
             String formattedPath = formatPath(userId, path);
-            return minioRepository.findAll(formattedPath).stream()
-                    .filter(MinioObject::isDir)
+            return minioFolderRepository.findAllFoldersByPath(formattedPath).stream()
                     .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
                     .toList();
         } catch (MinioRepositoryException ex) {
@@ -45,7 +43,7 @@ public class FolderServiceImpl implements FolderService {
     public void createEmptyFolder(Long userId, FolderCreateRequest createRequest) {
         try {
             String folderPath = formatPathForFolder(userId, createRequest.getCurrentFolderPath(), createRequest.getFolderName());
-            minioRepository.createEmptyFolder(folderPath);
+            minioFolderRepository.createEmptyFolder(folderPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to create empty folder", ex);
             throw new RuntimeException(ex);
@@ -56,7 +54,7 @@ public class FolderServiceImpl implements FolderService {
     public void uploadFolder(Long userId, FolderUploadRequest uploadRequest) {
         try {
             List<MinioSaveDataDto> minioSaveDataDtoList = folderUploadReqToMinioSaveDtoListMapper.map(userId, uploadRequest);
-            minioRepository.saveAll(minioSaveDataDtoList);
+            minioFolderRepository.saveAll(minioSaveDataDtoList);
         } catch (MappingException | MinioRepositoryException ex) {
             log.warn("Failed to upload folder", ex);
             throw new RuntimeException(ex);
@@ -67,18 +65,18 @@ public class FolderServiceImpl implements FolderService {
     public void deleteFolder(Long userId, FolderDeleteRequest deleteRequest) {
         try {
             String formattedPath = formatPath(userId, deleteRequest.getFolderPath());
-            minioRepository.deleteAllRecursive(formattedPath);
+            minioFolderRepository.deleteFolderByPath(formattedPath);
         } catch (MinioRepositoryException ex) {
+            log.warn("Failed to delete folder", ex);
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public Resource downloadFolder(Long userId, FolderDownloadRequest downloadRequest) {
+    public ByteArrayOutputStream downloadFolder(Long userId, FolderDownloadRequest downloadRequest) {
         try {
             String formattedPath = formatPath(userId, downloadRequest.getFolderPath());
-            byte[] folder =  minioRepository.downloadByPathAll(formattedPath);
-            return new ByteArrayResource(folder);
+            return minioFolderRepository.downloadFolderByPath(formattedPath);
         } catch (MinioRepositoryException ex) {
             throw new RuntimeException(ex);
         }
@@ -89,8 +87,9 @@ public class FolderServiceImpl implements FolderService {
         try {
             String updatedPath = updateFolderPath(userId, renameRequest);
             String oldPath = formatPath(userId, renameRequest.getPath());
-            minioRepository.renameAllRecursive(oldPath, updatedPath);
+            minioFolderRepository.renameFolder(oldPath, updatedPath);
         } catch (MinioRepositoryException ex) {
+            log.warn("Failed to rename folder", ex);
             throw new MinioRepositoryException(ex);
         }
     }

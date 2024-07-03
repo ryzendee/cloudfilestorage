@@ -6,15 +6,15 @@ import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.mapper.FolderUploadReqToMinioSaveDtoListMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFolderResponseMapper;
 import com.app.cloudfilestorage.models.MinioObject;
-import com.app.cloudfilestorage.repository.MinioRepository;
+import com.app.cloudfilestorage.repository.MinioFolderRepository;
 import com.app.cloudfilestorage.service.impl.FolderServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.Resource;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
@@ -28,7 +28,7 @@ class FolderServiceTest {
     @InjectMocks
     private FolderServiceImpl folderService;
     @Mock
-    private MinioRepository minioRepository;
+    private MinioFolderRepository minioFolderRepository;
     @Mock
     private MinioObjectToFolderResponseMapper minioObjectToFolderResponseMapper;
     @Mock
@@ -42,15 +42,14 @@ class FolderServiceTest {
         List<MinioObject> minioObjectList = List.of(new MinioObject(path, true, 0));
         FolderResponse folderResponse = new FolderResponse("name", path, 0);
 
-        when(minioRepository.findAll(formattedPath))
+        when(minioFolderRepository.findAllFoldersByPath(formattedPath))
                 .thenReturn(minioObjectList);
         when(minioObjectToFolderResponseMapper.map(minioObjectList.getFirst(), USER_ID))
                 .thenReturn(folderResponse);
 
         List<FolderResponse> folderResponseList = folderService.getFoldersForPathByUserId(USER_ID, path);
         assertThat(folderResponseList).containsOnly(folderResponse);
-
-        verify(minioRepository).findAll(formattedPath);
+        verify(minioFolderRepository).findAllFoldersByPath(formattedPath);
         verify(minioObjectToFolderResponseMapper).map(minioObjectList.getFirst(), USER_ID);
     }
 
@@ -60,10 +59,10 @@ class FolderServiceTest {
         String formattedPath = formatPathForFolder(USER_ID, createRequest.getCurrentFolderPath(), createRequest.getFolderName());
 
         doNothing()
-                .when(minioRepository).createEmptyFolder(formattedPath);
+                .when(minioFolderRepository).createEmptyFolder(formattedPath);
 
         folderService.createEmptyFolder(USER_ID, createRequest);
-        verify(minioRepository).createEmptyFolder(formattedPath);
+        verify(minioFolderRepository).createEmptyFolder(formattedPath);
     }
 
     @Test
@@ -75,12 +74,12 @@ class FolderServiceTest {
         when(folderUploadReqToMinioSaveDtoListMapper.map(USER_ID, uploadRequest))
                 .thenReturn(saveDataDtoList);
         doNothing()
-                .when(minioRepository).saveAll(saveDataDtoList);
+                .when(minioFolderRepository).saveAll(saveDataDtoList);
 
         folderService.uploadFolder(USER_ID, uploadRequest);
 
         verify(folderUploadReqToMinioSaveDtoListMapper).map(USER_ID, uploadRequest);
-        verify(minioRepository).saveAll(saveDataDtoList);
+        verify(minioFolderRepository).saveAll(saveDataDtoList);
     }
 
     @Test
@@ -89,26 +88,25 @@ class FolderServiceTest {
         String formattedPath = formatPath(USER_ID, deleteRequest.getFolderPath());
 
         doNothing()
-                .when(minioRepository).deleteAllRecursive(formattedPath);
+                .when(minioFolderRepository).deleteFolderByPath(formattedPath);
 
         folderService.deleteFolder(USER_ID, deleteRequest);
 
-        verify(minioRepository).deleteAllRecursive(formattedPath);
+        verify(minioFolderRepository).deleteFolderByPath(formattedPath);
     }
 
     @Test
-    void downloadFolder_validRequest_downloadsSuccessfully() throws Exception {
+    void downloadFolder_validRequest_downloadsSuccessfully() {
         FolderDownloadRequest downloadRequest = new FolderDownloadRequest("name", "path/name");
         String formattedPath = formatPath(USER_ID, downloadRequest.getFolderPath());
-        byte[] folderBytes = new byte[5];
+        ByteArrayOutputStream baos = mock(ByteArrayOutputStream.class);
 
-        when(minioRepository.downloadByPathAll(formattedPath, downloadRequest.getName()))
-                .thenReturn(folderBytes);
+        when(minioFolderRepository.downloadFolderByPath(formattedPath))
+                .thenReturn(baos);
 
-        Resource resource = folderService.downloadFolder(USER_ID, downloadRequest);
-        assertThat(resource.getContentAsByteArray()).isEqualTo(folderBytes);
-
-        verify(minioRepository).downloadByPathAll(formattedPath, downloadRequest.getName());
+        ByteArrayOutputStream actualBaos = folderService.downloadFolder(USER_ID, downloadRequest);
+        assertThat(baos).isEqualTo(actualBaos);
+        verify(minioFolderRepository).downloadFolderByPath(formattedPath);
     }
 
     @Test
@@ -118,11 +116,11 @@ class FolderServiceTest {
         String updatedPath = updateFolderPath(USER_ID, renameRequest);
 
         doNothing()
-                .when(minioRepository).renameAllRecursive(oldPath, updatedPath);
+                .when(minioFolderRepository).renameFolder(oldPath, updatedPath);
 
         folderService.renameFolder(USER_ID, renameRequest);
 
-        verify(minioRepository).renameAllRecursive(oldPath, updatedPath);
+        verify(minioFolderRepository).renameFolder(oldPath, updatedPath);
     }
 
 }
