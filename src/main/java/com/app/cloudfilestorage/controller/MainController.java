@@ -40,8 +40,8 @@ public class MainController {
 
         List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(userSessionDto.id(), path);
         List<FileResponse> fileDtoList = fileService.getFilesForPathByUserId(userSessionDto.id(), path);
-        model.addAttribute("foldersList", folderDtoList);
-        model.addAttribute("filesList", fileDtoList);
+        model.addAttribute("folderList", folderDtoList);
+        model.addAttribute("fileList", fileDtoList);
 
         //We don't need breadcrumbs at the default path
         if (!path.equals(SEPARATOR)) {
@@ -52,10 +52,11 @@ public class MainController {
         model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
         model.addAttribute("folderDownloadRequest", new FolderDownloadRequest());
         model.addAttribute("folderRenameRequest", new FolderRenameRequest());
-
         model.addAttribute("folderCreateRequest", new FolderCreateRequest(path));
         model.addAttribute("folderUploadRequest", new FolderUploadRequest(path));
 
+        model.addAttribute("fileDownloadRequest", new FileDownloadRequest());
+        model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
         model.addAttribute("fileUploadRequest", new FileUploadRequest(path));
 
         return "main-view";
