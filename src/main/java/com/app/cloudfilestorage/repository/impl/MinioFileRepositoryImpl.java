@@ -2,6 +2,7 @@ package com.app.cloudfilestorage.repository.impl;
 
 import com.app.cloudfilestorage.config.props.MinioProperties;
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
+import com.app.cloudfilestorage.exception.MinioObjectExistsException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.ItemToMinioObjectMapper;
 import com.app.cloudfilestorage.models.MinioObject;
@@ -46,6 +47,10 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
     @Override
     public void saveFile(MinioSaveDataDto saveDto) {
         try {
+            if (isObjectNameExists(saveDto.objectName())) {
+                throw new MinioObjectExistsException("This object name already exists" + saveDto.objectName());
+            }
+
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
@@ -84,6 +89,19 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
         } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {
             throw new MinioRepositoryException(ex);
         }
+    }
+
+    private boolean isObjectNameExists(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
+        return statObject(objectName) != null;
+    }
+
+    private StatObjectResponse statObject(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
+        return minioClient.statObject(
+                StatObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build()
+        );
     }
 
     private boolean isFile(Item item) {

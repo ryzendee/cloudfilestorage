@@ -2,6 +2,7 @@ package com.app.cloudfilestorage.repository.impl;
 
 import com.app.cloudfilestorage.config.props.MinioProperties;
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
+import com.app.cloudfilestorage.exception.MinioObjectExistsException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.ItemToMinioObjectMapper;
 import com.app.cloudfilestorage.models.MinioObject;
@@ -38,6 +39,10 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
     @Override
     public void createEmptyFolder(String path) {
         try {
+            if (isObjectNameExists(path)) {
+                throw new MinioObjectExistsException("This object name already exists: " + path);
+            }
+
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
@@ -86,6 +91,10 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
     @Override
     public void renameFolder(String oldPath, String newPath) {
         try {
+            if (isObjectNameExists(newPath)) {
+                throw new MinioObjectExistsException("This object name already exists: " + newPath);
+            }
+
             List<Item> objectsInOldFolder = findAll(oldPath, RECURSIVE);
 
             for (Item item : objectsInOldFolder) {
@@ -120,7 +129,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
             List<Item> itemList = findAll(path, RECURSIVE);
 
             for (Item item : itemList) {
-                try (InputStream objectStream = getObject(item.objectName())) {
+                try (InputStream objectStream = getObjectStream(item.objectName())) {
                     //Need to avoid root folders
                     String objectName = item.objectName().replaceAll(path, "");
                     zos.putNextEntry(new ZipEntry(objectName));
@@ -140,6 +149,33 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
         }
 
         return baos;
+    }
+
+    private boolean isObjectNameExists(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
+        try {
+            statObject(objectName);
+            return true;
+        } catch (ErrorResponseException ex) {
+            if (isFileMissing(ex)) {
+                return false;
+            }
+
+            throw ex;
+        }
+    }
+    private boolean isFileMissing(ErrorResponseException ex) {
+        return ex.errorResponse()
+                .code()
+                .equals("NoSuchKey");
+    }
+
+    private StatObjectResponse statObject(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
+        return minioClient.statObject(
+                StatObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build()
+        );
     }
 
     private SnowballObject mapToSnowBallObject(MinioSaveDataDto minioSaveDataDto) {
@@ -193,7 +229,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
         return itemList;
     }
 
-    private InputStream getObject(String path) throws MinioException, NoSuchAlgorithmException, InvalidKeyException, IOException {
+    private InputStream getObjectStream(String path) throws MinioException, NoSuchAlgorithmException, InvalidKeyException, IOException {
         return minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
@@ -201,4 +237,5 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
                         .build()
         );
     }
+
 }
