@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Drive</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+<!--Header-->
+<div th:replace="~{fragments/header :: header-fragment}"/>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+
+            <h3>My drive</h3>
+
+            <!--User folders and files table-->
+            <div class="content mt-3">
+                <table class="table">
+                    <thead>
+                        <div th:replace="~{fragments/table-rows-fragment :: tr-fragment}"/>
+                    </thead>
+                    <tbody th:if="${searchResult}" th:with="folderList=${searchResult.folderList},
+                                                            fileList=${searchResult.fileList}">
+                        <div th:replace="~{fragments/folders-table-data :: folders-td-fragment}"/>
+                        <div th:replace="~{fragments/file-table-data :: files-td-fragment}"
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer-fragment}"/>
+<div th:insert="~{fragments/modal/rename-folder-modal :: folder-rename-modal}"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script crossorigin="anonymous" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="
+        src="https://code.jquery.com/jquery-3.7.0.slim.min.js"></script>
+<script src="/js/rename-script.js"></script>
+</body>
+</html>
