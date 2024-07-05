@@ -5,6 +5,9 @@ import com.app.cloudfilestorage.dto.request.FileDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FileDownloadRequest;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
 import com.app.cloudfilestorage.dto.response.FileResponse;
+import com.app.cloudfilestorage.exception.FileServiceException;
+import com.app.cloudfilestorage.exception.FolderServiceException;
+import com.app.cloudfilestorage.exception.MinioObjectExistsException;
 import com.app.cloudfilestorage.exception.MinioRepositoryException;
 import com.app.cloudfilestorage.mapper.FileUploadRequestToMinioSaveDataMapper;
 import com.app.cloudfilestorage.mapper.MinioObjectToFileResponseMapper;
@@ -32,16 +35,24 @@ public class FileServiceImpl implements FileService {
     private final FileUploadRequestToMinioSaveDataMapper minioSaveDataMapper;
 
     @Override
-    public List<FileResponse> getFilesForPathByUserId(Long userId, String path) {
-        String formattedPath = formatPath(userId, path);
-
+    public List<FileResponse> getAllFilesByUserId(Long userId) {
         try {
-            return minioFileRepository.findAllFilesByPath(formattedPath).stream()
-                    .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
-                    .toList();
+            String userRootFolder = formatPath(userId);
+            return findAllByPathAndMapToResponse(userId, userRootFolder);
         } catch (MinioRepositoryException ex) {
-            log.warn("Failed to find files by path: {}", formattedPath, ex);
-            throw new RuntimeException(ex);
+            log.warn("Failed to find all user files", ex);
+            throw new FileServiceException("Failed to find all user files");
+        }
+    }
+
+    @Override
+    public List<FileResponse> getFilesForPathByUserId(Long userId, String path) {
+        try {
+            String formattedPath = formatPath(userId, path);
+            return findAllByPathAndMapToResponse(userId, formattedPath);
+        } catch (MinioRepositoryException ex) {
+            log.warn("Failed to find files by path: {}", path, ex);
+            throw new FileServiceException("Failed to load files");
         }
     }
 
@@ -53,7 +64,9 @@ public class FileServiceImpl implements FileService {
             minioFileRepository.saveFile(minioSaveDataDto);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to upload file", ex);
-            throw new RuntimeException(ex);
+            throw new FileServiceException("Failed to upload file");
+        } catch (MinioObjectExistsException ex) {
+            throw new FolderServiceException("This name already exists");
         }
     }
 
@@ -64,7 +77,7 @@ public class FileServiceImpl implements FileService {
             minioFileRepository.deleteFileByObjectName(formattedPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to delete file", ex);
-            throw new RuntimeException(ex);
+            throw new FileServiceException("Failed to delete file");
         }
     }
 
@@ -79,7 +92,13 @@ public class FileServiceImpl implements FileService {
 
         } catch (MinioRepositoryException | IOException ex) {
             log.warn("Failed to download file", ex);
-            throw new RuntimeException(ex);
+            throw new FileServiceException("Failed to download file");
         }
+    }
+
+    private List<FileResponse> findAllByPathAndMapToResponse(Long userId, String path) throws MinioRepositoryException {
+        return minioFileRepository.findAllFilesByPath(path).stream()
+                .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
+                .toList();
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface FileService {
 
+    List<FileResponse> getAllFilesByUserId(Long userId);
     List<FileResponse> getFilesForPathByUserId(Long userId, String path);
     void uploadFile(Long userId, FileUploadRequest fileUploadRequest);
     void deleteFile(Long userId, FileDeleteRequest fileDeleteRequest);
