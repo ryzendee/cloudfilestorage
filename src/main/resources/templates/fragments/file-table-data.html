@@ -1,0 +1,39 @@
+<tr th:fragment="files-td-fragment"
+        th:if="${fileList}" th:each="file : ${fileList}">
+    <td>
+        <i class="bi bi-file-earmark"></i>
+        <span th:text="${file.name}">No data</span>
+    </td>
+    <td>Me</td>
+    <td th:text="${formattedDate}">No data</td>
+    <td th:text="${file.size}">No data</td>
+    <td>My disk</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button"
+                    id="dropdownFileMenuButton" data-bs-toggle="dropdown"
+                    aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownFileMenuButton">
+                <li>
+                    <form method="post" th:action="@{/files/download}" th:object="${fileDownloadRequest}">
+                        <input name="path" th:value="${file.path}" type="hidden"/>
+                        <input name="name" th:value="${file.name}" type="hidden"/>
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-download"></i>
+                            Download
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form method="post" th:action="@{/files/delete}" th:object="${fileDeleteRequest}">
+                        <input name="path" th:value="${file.path}" type="hidden"/>
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

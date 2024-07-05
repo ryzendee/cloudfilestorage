@@ -1,0 +1,53 @@
+<tr th:fragment="folders-td-fragment"
+        th:if="${folderList}" th:each="folder : ${folderList}">
+    <td>
+        <i class="bi bi-folder"></i>
+        <a th:href="@{'/?path=' + ${folder.path}}"
+           th:text="${folder.name}"
+           class="text-decoration-none text-dark">
+            No data
+        </a>
+    </td>
+    <td>Me</td>
+    <td th:text="${formattedDate}">No data</td>
+    <td th:text="${folder.size}">No data</td>
+    <td>My drive</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button"
+                    id="dropdownFolderMenuButton" data-bs-toggle="dropdown"
+                    aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownFolderMenuButton">
+                <li>
+                    <form method="post" th:action="@{/folders/download}"
+                          th:object="${folderDownloadRequest}">
+                        <input name="folderPath" th:value="${folder.path}" type="hidden"/>
+                        <input name="name" th:value="${folder.name}" type="hidden"/>
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-download"></i>
+                            Download
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form method="post" th:action="@{/folders/delete}"
+                          th:object="${folderDeleteRequest}">
+                        <input name="folderPath" th:value="${folder.path}" type="hidden"/>
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <button class="dropdown-item" data-bs-target="#folderRenameModal"
+                            data-bs-toggle="modal"
+                            th:attr="data-folder-path=${folder.path}, data-folder-name=${folder.name}">
+                        <i class="bi bi-pencil-square"></i>
+                        Rename
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
