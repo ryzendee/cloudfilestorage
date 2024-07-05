@@ -10,7 +10,7 @@
                 <form id="folderCreateForm" method="post" th:action="@{/folders/empty}"
                       th:object="${folderCreateRequest}">
                     <label class="form-label" for="folderCreateInput">Enter folder name</label>
-                    <input class="form-control" id="folderCreateInput" th:field="*{folderName}" type="text">
+                    <input class="form-control" id="folderCreateInput" th:field="*{folderName}" type="text" autocomplete="off">>
                     <input th:field="*{currentFolderPath}" type="hidden"/>
                 </form>
             </div>

@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <form id="folderRenameForm" th:action="@{/folders/rename}" th:method="post" th:object="${folderRenameRequest}">
                     <div class="form-outline">
-                        <input id="updatedName" class="form-control" th:field="*{updatedName}" type="text">
+                        <input id="updatedName" class="form-control" th:field="*{updatedName}" type="text" autocomplete="off">
                     </div>
                     <input id="currentName" th:field="*{currentName}" type="hidden">
                     <input id="path" th:field="*{path}" type="hidden">
