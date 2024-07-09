@@ -20,6 +20,7 @@ ext {
     mapstructVersion = '1.5.5.Final'
     testcontainersRedisVersion = '2.2.2'
     minioVersion = '8.5.8'
+    apacheIOVersion = '2.16.1'
 }
 
 dependencies {
@@ -32,6 +33,7 @@ dependencies {
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation "io.minio:minio:$minioVersion"
+    implementation "commons-io:commons-io:$apacheIOVersion"
     implementation 'org.projectlombok:lombok'
     implementation 'org.liquibase:liquibase-core'
     annotationProcessor 'org.projectlombok:lombok'
