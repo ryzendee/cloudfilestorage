@@ -32,7 +32,7 @@
             <button class="btn btn-primary btn-block mb-4" type="submit" value="Log in">Login</button>
 
             <!--Messages-->
-            <div class="alert alert-danger text-center" th:if="${param.error}"></div>
+            <div class="alert alert-danger text-center" th:if="${param.error}">Failed to login, please check that your login and password are correct</div>
             <div class="alert alert-success text-center" th:if="${successMessage}" th:text="${successMessage}"></div>
 
             <!--To signup page-->

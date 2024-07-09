@@ -1,10 +1,11 @@
-<nav th:fragment="header-fragment" class="navbar navbar-expand-lg bg-light">
+<nav th:fragment="header-fragment"
+     class="navbar navbar-expand-lg bg-light d-flex justify-content-between align-items-center">
     <div class="container-fluid">
-        <div class="text-black ">
-            Cloud File Storage
+        <div class="icon-box fs-1 text-primary">
+            <i class="bi bi-cloud-fog2-fill"></i>
         </div>
-        <form th:action="@{/search}" class="col-3 d-flex" th:method="get">
-            <input type="text" name="query" class="form-control me-2" placeholder="Search" autocomplete="off">
+        <form th:action="@{/search}" class="col-3 d-flex align-items-center" th:method="get">
+            <input id="searchInput" type="text" name="query" class="form-control me-2" placeholder="Search" autocomplete="off">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
         <div class="dropdown">
@@ -13,7 +14,13 @@
                 <div class="bi bi-person fs-4 text-black"></div>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
+                <li>
+                    <form th:action="@{/logout}" th:method="post">
+                        <button type="submit" class="dropdown-item">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
