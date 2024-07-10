@@ -11,7 +11,7 @@
                       th:object="${folderUploadRequest}">
                     <label class="form-label" for="folderUploadInput">Select folder</label>
                     <input class="form-control" id="folderUploadInput" th:field="*{files}" type="file" webkitdirectory/>
-                    <input th:field="*{currentFolderPath}" type="hidden"/>
+                    <input th:name="currentFolderPath" th:value="${currentPath}" type="hidden"/>
                 </form>
             </div>
             <div class="modal-footer">

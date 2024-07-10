@@ -11,8 +11,4 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadRequest {
     private String currentFolderPath;
     private MultipartFile file;
-
-    public FileUploadRequest(String currentFolderPath) {
-        this.currentFolderPath = currentFolderPath;
-    }
 }

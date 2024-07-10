@@ -11,7 +11,7 @@
                       th:object="${fileUploadRequest}">
                     <label class="form-label" for="fileUploadInput">Select file</label>
                     <input class="form-control" id="fileUploadInput" th:field="*{file}" type="file"/>
-                    <input th:field="*{currentFolderPath}" type="hidden"/>
+                    <input th:name="currentFolderPath" th:value="${currentPath}" type="hidden"/>
                 </form>
             </div>
             <div class="modal-footer">

@@ -14,8 +14,5 @@ public class FolderCreateRequest {
     @NotBlank(message = "Folder name must not be blank")
     private String folderName;
 
-    public FolderCreateRequest(String currentFolderPath) {
-        this.currentFolderPath = currentFolderPath;
-    }
 }
 

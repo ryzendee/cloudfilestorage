@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.app.cloudfilestorage.utils.BreadcrumbUtil.getBreadcrumb;
 
@@ -49,16 +50,28 @@ public class MainController {
             model.addAttribute("breadcrumbDto", breadcrumbDto);
         }
 
-        model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
-        model.addAttribute("folderDownloadRequest", new FolderDownloadRequest());
-        model.addAttribute("folderRenameRequest", new FolderRenameRequest());
-        model.addAttribute("folderCreateRequest", new FolderCreateRequest(path));
-        model.addAttribute("folderUploadRequest", new FolderUploadRequest(path));
-
-        model.addAttribute("fileDownloadRequest", new FileDownloadRequest());
-        model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
-        model.addAttribute("fileUploadRequest", new FileUploadRequest(path));
+        model.addAttribute("currentPath", path);
+        model.addAllAttributes(getFolderRequestAttributeMap());
+        model.addAllAttributes(getFileRequestAttributeMap());
 
         return "main-view";
+    }
+
+    private Map<String, Object> getFolderRequestAttributeMap() {
+        return Map.of(
+                "folderDeleteRequest", new FolderDeleteRequest(),
+                "folderDownloadRequest", new FolderDownloadRequest(),
+                "folderRenameRequest", new FolderRenameRequest(),
+                "folderCreateRequest", new FolderCreateRequest(),
+                "folderUploadRequest", new FolderUploadRequest()
+        );
+    }
+
+    private Map<String, Object> getFileRequestAttributeMap() {
+        return Map.of(
+                "fileDownloadRequest", new FileDownloadRequest(),
+                "fileDeleteRequest", new FileDeleteRequest(),
+                "fileUploadRequest", new FileUploadRequest()
+        );
     }
 }

@@ -20,7 +20,4 @@ public class FolderUploadRequest {
     private String currentFolderPath;
     @Size(min = 1, message = "Folder must contains at least 1 file")
     private List<MultipartFile> files;
-    public FolderUploadRequest(String currentFolderPath) {
-        this.currentFolderPath = currentFolderPath;
-    }
 }

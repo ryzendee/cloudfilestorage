@@ -8,7 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/search")
@@ -27,12 +32,8 @@ public class SearchController {
             SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(userSessionDto.id(), query);
             model.addAttribute("searchResult", searchResult);
 
-            model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
-            model.addAttribute("folderDownloadRequest", new FolderDownloadRequest());
-            model.addAttribute("folderRenameRequest", new FolderRenameRequest());
-
-            model.addAttribute("fileDownloadRequest", new FileDownloadRequest());
-            model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
+            model.addAttribute(getFolderRequestAttributeMap());
+            model.addAllAttributes(getFileRequestAttributeMap());
         }
 
         return "search-view";
@@ -40,5 +41,20 @@ public class SearchController {
 
     private boolean isQueryValid(String query) {
         return !StringUtils.isBlank(query);
+    }
+
+    private Map<String, Object> getFolderRequestAttributeMap() {
+        return Map.of(
+                "folderDeleteRequest", new FolderDeleteRequest(),
+                "folderDownloadRequest", new FolderDownloadRequest(),
+                "folderRenameRequest", new FolderRenameRequest()
+                );
+    }
+
+    private Map<String, Object> getFileRequestAttributeMap() {
+        return Map.of(
+                "fileDownloadRequest", new FileDownloadRequest(),
+                "fileDeleteRequest", new FileDeleteRequest()
+        );
     }
 }
