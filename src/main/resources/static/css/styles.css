@@ -3,7 +3,11 @@ body {
 }
 
 .content {
-    min-height: 500px;
+    padding-bottom: 250px;
+}
+
+.messages {
+    min-height: 100px;
 }
 
 .footer-end {
