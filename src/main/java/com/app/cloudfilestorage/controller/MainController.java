@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -21,12 +22,12 @@ import java.util.Map;
 import static com.app.cloudfilestorage.utils.BreadcrumbUtil.getBreadcrumb;
 
 
-@Controller("/")
+@Controller
+@RequestMapping("/")
 @Slf4j
 @RequiredArgsConstructor
 public class MainController {
 
-    //
     private static final String SEPARATOR = "/";
     private final FolderService folderService;
     private final FileService fileService;
