@@ -32,7 +32,7 @@ public class SearchController {
             SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(userSessionDto.id(), query);
             model.addAttribute("searchResult", searchResult);
 
-            model.addAttribute(getFolderRequestAttributeMap());
+            model.addAllAttributes(getFolderRequestAttributeMap());
             model.addAllAttributes(getFileRequestAttributeMap());
         }
 
