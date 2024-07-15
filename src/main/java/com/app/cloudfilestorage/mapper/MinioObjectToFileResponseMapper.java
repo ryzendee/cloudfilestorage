@@ -7,12 +7,14 @@ import com.app.cloudfilestorage.utils.PathGeneratorUtil;
 import org.mapstruct.*;
 
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
+import static org.apache.commons.io.FilenameUtils.getExtension;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MinioObjectToFileResponseMapper {
 
     @Mapping(source = "path", target = "name", qualifiedByName = "formatFilenameFromPath")
     @Mapping(source = "path", target = "path", qualifiedByName = "removeRootUserFolderFromPath")
+    @Mapping(source = "path", target = "extension", qualifiedByName = "formatExtension")
     @Mapping(source = "size", target = "formattedSize", qualifiedByName = "formatSize")
     FileResponse map(MinioObject from, @Context Long userId);
 
@@ -29,5 +31,10 @@ public interface MinioObjectToFileResponseMapper {
     @Named("formatSize")
     default String formatSize(long size) {
         return byteCountToDisplaySize(size);
+    }
+
+    @Named("formatExtension")
+    default String formatExtension(String objectName) {
+        return getExtension(objectName);
     }
 }
