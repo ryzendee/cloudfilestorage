@@ -33,6 +33,15 @@
                         </button>
                     </form>
                 </li>
+                <li>
+                    <button class="dropdown-item" data-bs-target="#fileRenameModal"
+                            data-bs-toggle="modal"
+                            th:attr="data-file-current-name=${file.name},
+                                     data-file-extension=${file.extension}">
+                        <i class="bi bi-pencil-square"></i>
+                        Rename
+                    </button>
+                </li>
             </ul>
         </div>
     </td>

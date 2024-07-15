@@ -17,7 +17,7 @@
 
         <div class="row">
             <div class="left-panel col-md-3">
-                <div class="buttons mt-3">
+                <div class="buttons mt-5">
                     <button class="btn btn-primary dropdown-toggle w-50" type="button" id="createDropdown"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         Create
@@ -50,8 +50,8 @@
             </div>
 
             <div class="col-md-2 offset-md-2">
-                <div class="messages h-15 d-flex justify-content-center align-items-center">
-                    <div th:replace="~{fragments/messages :: messages-fragment}"></div>
+                <div class="messages mt-5 h-15 d-flex justify-content-center align-items-center position-relative">
+                    <div class="message-content position-absolute" th:replace="~{fragments/messages :: messages-fragment}"></div>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
 <div th:insert="~{fragments/modal/create-folder-modal :: folder-create-modal}"></div>
 <div th:insert="~{fragments/modal/upload-file-modal :: file-upload-modal}"></div>
 <div th:insert="~{fragments/modal/rename-folder-modal :: folder-rename-modal}"></div>
-
+<div th:insert="~{fragments/modal/rename-file-modal :: file-rename-modal}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script crossorigin="anonymous" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="

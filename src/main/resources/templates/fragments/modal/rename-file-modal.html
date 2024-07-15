@@ -1,5 +1,5 @@
-<div aria-hidden="true" class="modal fade" tabindex="-1" id="folderRenameModal"
-     th:fragment="folder-rename-modal">
+<div aria-hidden="true" class="modal fade" tabindex="-1" id="fileRenameModal"
+     th:fragment="file-rename-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,17 +7,18 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="folderRenameForm" th:action="@{/folders/rename}" th:method="post" th:object="${folderRenameRequest}">
+                <form id="fileRenameForm" th:action="@{/files/rename}" th:method="post" th:object="${fileRenameRequest}">
                     <div class="form-outline">
-                        <input th:field="*{updatedName}" class="form-control" type="text" autocomplete="off">
+                        <input th:name="updatedName" class="form-control" type="text" autocomplete="off">
                     </div>
-                    <input id="folderCurrentName" th:name="currentName" type="hidden">
                     <input th:name="currentFolderPath" th:value="${currentPath}" type="hidden"/>
+                    <input id="fileCurrentName" th:name="currentName" type="hidden">
+                    <input id="fileExtension" th:name="extension" type="hidden"/>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" form="folderRenameForm" type="submit">
+                <button class="btn btn-primary" form="fileRenameForm" type="submit">
                     Ok
                 </button>
             </div>

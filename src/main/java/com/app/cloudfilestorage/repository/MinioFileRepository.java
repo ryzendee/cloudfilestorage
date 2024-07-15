@@ -12,5 +12,5 @@ public interface MinioFileRepository {
     void saveFile(MinioSaveDataDto minioSaveDataDto);
     void deleteFileByObjectName(String objectName);
     InputStream downloadFileByObjectName(String objectName);
-
+    void renameFile(String currentName, String updatedName);
 }

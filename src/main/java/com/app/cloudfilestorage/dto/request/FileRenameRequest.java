@@ -10,13 +10,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FolderRenameRequest {
+public class FileRenameRequest {
 
-    @NotBlank(message = "Updated folder name must not be blank")
+
+    @NotBlank(message = "Updated file name must not be blank")
     private String updatedName;
-    @NotBlank(message = "Current folder name must not be blank")
+    @NotBlank(message = "Current file name must not be blank")
     private String currentName;
-    @NotBlank(message = "Folder path must not be blank")
+    @NotBlank(message = "File path must not be blank")
     private String currentFolderPath;
+    private String extension;
     private String objectName;
 }

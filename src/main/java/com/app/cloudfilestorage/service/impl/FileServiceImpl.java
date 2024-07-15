@@ -3,6 +3,7 @@ package com.app.cloudfilestorage.service.impl;
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
 import com.app.cloudfilestorage.dto.request.FileDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FileDownloadRequest;
+import com.app.cloudfilestorage.dto.request.FileRenameRequest;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
 import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.exception.FileServiceException;
@@ -23,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
+import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
 
 @Service
 @Slf4j
@@ -93,6 +94,22 @@ public class FileServiceImpl implements FileService {
         } catch (MinioRepositoryException | IOException ex) {
             log.warn("Failed to download file", ex);
             throw new FileServiceException("Failed to download file");
+        }
+    }
+
+    @Override
+    public void renameFile(Long userId, FileRenameRequest renameRequest) {
+        try {
+            String currentObjectName = formatPathForFile(userId, renameRequest.getCurrentFolderPath(), renameRequest.getCurrentName());
+            String updatedObjectName = formatPathForFile(userId, renameRequest.getCurrentFolderPath(), renameRequest.getUpdatedName());
+            updatedObjectName += ".";
+            updatedObjectName += renameRequest.getExtension();
+            minioFileRepository.renameFile(currentObjectName, updatedObjectName);
+        } catch (MinioRepositoryException ex) {
+            log.warn("Failed to rename folder", ex);
+            throw new FolderServiceException("Failed to rename folder");
+        } catch (MinioObjectExistsException ex) {
+            throw new FolderServiceException("This name is already exists");
         }
     }
 

@@ -72,7 +72,8 @@ public class MainController {
         return Map.of(
                 "fileDownloadRequest", new FileDownloadRequest(),
                 "fileDeleteRequest", new FileDeleteRequest(),
-                "fileUploadRequest", new FileUploadRequest()
+                "fileUploadRequest", new FileUploadRequest(),
+                "fileRenameRequest", new FileRenameRequest()
         );
     }
 }

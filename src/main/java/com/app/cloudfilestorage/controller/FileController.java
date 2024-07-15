@@ -3,6 +3,7 @@ package com.app.cloudfilestorage.controller;
 import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.FileDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FileDownloadRequest;
+import com.app.cloudfilestorage.dto.request.FileRenameRequest;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
 import com.app.cloudfilestorage.service.FileService;
 import jakarta.validation.Valid;
@@ -75,8 +76,8 @@ public class FileController {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
         } else {
-            Resource fileResource = fileService.downloadFile(userSessionDto.id(), fileDownloadRequest);
             redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Starts file downloading...");
+            Resource fileResource = fileService.downloadFile(userSessionDto.id(), fileDownloadRequest);
             String filename = encode(fileDownloadRequest.getName(), StandardCharsets.UTF_8);
 
             return ResponseEntity.ok()
@@ -85,5 +86,17 @@ public class FileController {
         }
     }
 
+    @PostMapping("/rename")
+    public RedirectView renameFile(@Valid @ModelAttribute FileRenameRequest fileRenameRequest,
+                                   BindingResult bindingResult,
+                                   @SessionAttribute UserSessionDto userSessionDto,
+                                   RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+        } else {
+            fileService.renameFile(userSessionDto.id(), fileRenameRequest);
+        }
 
+        return new RedirectView(HOME_PAGE_URI);
+    }
 }

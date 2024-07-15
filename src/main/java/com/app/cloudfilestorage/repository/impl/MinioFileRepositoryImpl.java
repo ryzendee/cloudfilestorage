@@ -91,8 +91,23 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
         }
     }
 
-    private boolean isObjectNameExists(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
-        return statObject(objectName) != null;
+    @Override
+    public void renameFile(String currentName, String updatedName) {
+        try {
+            copy(currentName, updatedName);
+            removeObject(currentName);
+        } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {
+            throw new MinioRepositoryException(ex);
+        }
+    }
+
+    private boolean isObjectNameExists(String objectName) {
+        try {
+            statObject(objectName);
+            return true;
+        } catch (MinioException | InvalidKeyException | NoSuchAlgorithmException | IOException ex) {
+            return false;
+        }
     }
 
     private StatObjectResponse statObject(String objectName) throws MinioException, InvalidKeyException, NoSuchAlgorithmException, IOException {
@@ -125,5 +140,28 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
         }
 
         return itemList;
+    }
+
+    private void copy(String sourceObj, String targetObj) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        minioClient.copyObject(
+                CopyObjectArgs.builder()
+                        .source(
+                                CopySource.builder()
+                                        .bucket(bucketName)
+                                        .object(sourceObj)
+                                        .build()
+                        ).bucket(bucketName)
+                        .object(targetObj)
+                        .build()
+        );
+    }
+
+    private void removeObject(String objectName) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build()
+        );
     }
 }
