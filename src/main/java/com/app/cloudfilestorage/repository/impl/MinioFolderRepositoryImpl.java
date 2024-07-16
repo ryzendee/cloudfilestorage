@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -183,7 +184,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
                 minioSaveDataDto.objectName(),
                 minioSaveDataDto.inputStream(),
                 minioSaveDataDto.objectSize(),
-                null
+                ZonedDateTime.now()
         );
     }
 
