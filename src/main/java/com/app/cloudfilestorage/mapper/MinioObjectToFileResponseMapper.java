@@ -6,6 +6,9 @@ import com.app.cloudfilestorage.utils.FileNameFormatterUtil;
 import com.app.cloudfilestorage.utils.PathGeneratorUtil;
 import org.mapstruct.*;
 
+import java.time.ZonedDateTime;
+
+import static com.app.cloudfilestorage.utils.DateFormatterUtil.formatZonedDateTime;
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
@@ -16,6 +19,7 @@ public interface MinioObjectToFileResponseMapper {
     @Mapping(source = "path", target = "path", qualifiedByName = "removeRootUserFolderFromPath")
     @Mapping(source = "path", target = "extension", qualifiedByName = "formatExtension")
     @Mapping(source = "size", target = "formattedSize", qualifiedByName = "formatSize")
+    @Mapping(source = "lastModified", target = "lastModified", qualifiedByName = "formatLastModified")
     FileResponse map(MinioObject from, @Context Long userId);
 
     @Named("formatFilenameFromPath")
@@ -36,5 +40,10 @@ public interface MinioObjectToFileResponseMapper {
     @Named("formatExtension")
     default String formatExtension(String objectName) {
         return getExtension(objectName);
+    }
+
+    @Named("formatLastModified")
+    default String formatLastModified(ZonedDateTime lastModified) {
+        return formatZonedDateTime(lastModified);
     }
 }
