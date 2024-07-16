@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableWebSecurity
 @Configuration
@@ -19,17 +18,16 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .formLogin(formConfigurer -> formConfigurer
                         .loginPage("/login")
-                        .successHandler(authenticationSuccessHandler)
                         .permitAll()
                 ).logout(logoutConfigurer -> logoutConfigurer
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
                 ).authorizeHttpRequests(requestMatcher -> requestMatcher
                         .requestMatchers(
                                 "/signup",
@@ -40,7 +38,11 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(daoAuthenticationProvider())
                 .exceptionHandling(handlingConfigurer ->
-                        handlingConfigurer.accessDeniedPage("/access-denied")
+                        handlingConfigurer
+                                .accessDeniedPage("/access-denied")
+                                .authenticationEntryPoint((req, resp, authEx) -> {
+                                    resp.sendRedirect("/login");
+                                })
                 );
 
         return httpSecurity.build();
