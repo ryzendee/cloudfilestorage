@@ -1,20 +1,20 @@
 package com.app.cloudfilestorage.controller;
 
 import com.app.cloudfilestorage.dto.BreadcrumbDto;
-import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.*;
 import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
+import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.service.FileService;
 import com.app.cloudfilestorage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
 import java.util.Map;
@@ -33,15 +33,15 @@ public class MainController {
     private final FileService fileService;
 
     @GetMapping
-    public String getMainView(@SessionAttribute UserSessionDto userSessionDto,
+    public String getMainView(@AuthenticationPrincipal UserEntity currentUser,
                               @RequestParam(defaultValue = SEPARATOR) String path,
                               Model model) {
         if (!path.endsWith(SEPARATOR)) {
             path += SEPARATOR;
         }
 
-        List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(userSessionDto.id(), path);
-        List<FileResponse> fileDtoList = fileService.getFilesForPathByUserId(userSessionDto.id(), path);
+        List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(currentUser.getId(), path);
+        List<FileResponse> fileDtoList = fileService.getFilesForPathByUserId(currentUser.getId(), path);
         model.addAttribute("folderList", folderDtoList);
         model.addAttribute("fileList", fileDtoList);
 

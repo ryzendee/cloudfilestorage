@@ -1,17 +1,17 @@
 package com.app.cloudfilestorage.controller;
 
-import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.*;
 import com.app.cloudfilestorage.dto.response.SearchResultResponse;
+import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.service.CloudStorageSearchService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.Map;
 
@@ -24,12 +24,12 @@ public class SearchController {
 
     @GetMapping
     public String search(@RequestParam String query,
-                         @SessionAttribute UserSessionDto userSessionDto,
+                         @AuthenticationPrincipal UserEntity currentUser,
                          Model model) {
         if (!isQueryValid(query)) {
             model.addAttribute("validationErrorMessage", "Search query must not be blank or empty");
         } else {
-            SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(userSessionDto.id(), query);
+            SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(currentUser.getId(), query);
             model.addAttribute("searchResult", searchResult);
 
             model.addAllAttributes(getFolderRequestAttributeMap());

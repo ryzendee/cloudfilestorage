@@ -1,10 +1,10 @@
 package com.app.cloudfilestorage.controller;
 
-import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.FileDeleteRequest;
 import com.app.cloudfilestorage.dto.request.FileDownloadRequest;
 import com.app.cloudfilestorage.dto.request.FileRenameRequest;
 import com.app.cloudfilestorage.dto.request.FileUploadRequest;
+import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.service.FileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +12,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -39,12 +39,12 @@ public class FileController {
     @PostMapping()
     public RedirectView uploadFile(@Valid @ModelAttribute FileUploadRequest fileUploadRequest,
                                    BindingResult bindingResult,
-                                   @SessionAttribute UserSessionDto userSessionDto,
+                                   @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            fileService.uploadFile(userSessionDto.id(), fileUploadRequest);
+            fileService.uploadFile(currentUser.getId(), fileUploadRequest);
             redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was uploaded!");
         }
 
@@ -54,12 +54,12 @@ public class FileController {
     @PostMapping("/delete")
     public RedirectView deleteFile(@Valid @ModelAttribute FileDeleteRequest fileDeleteRequest,
                                    BindingResult bindingResult,
-                                   @SessionAttribute UserSessionDto userSessionDto,
+                                   @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            fileService.deleteFile(userSessionDto.id(), fileDeleteRequest);
+            fileService.deleteFile(currentUser.getId(), fileDeleteRequest);
             redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was deleted!");
         }
 
@@ -70,14 +70,14 @@ public class FileController {
     @PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Object downloadFile(@Valid @ModelAttribute FileDownloadRequest fileDownloadRequest,
                                BindingResult bindingResult,
-                               @SessionAttribute UserSessionDto userSessionDto,
+                               @AuthenticationPrincipal UserEntity currentUser,
                                RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
         } else {
             redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Starts file downloading...");
-            Resource fileResource = fileService.downloadFile(userSessionDto.id(), fileDownloadRequest);
+            Resource fileResource = fileService.downloadFile(currentUser.getId(), fileDownloadRequest);
             String filename = encode(fileDownloadRequest.getName(), StandardCharsets.UTF_8);
 
             return ResponseEntity.ok()
@@ -89,12 +89,12 @@ public class FileController {
     @PostMapping("/rename")
     public RedirectView renameFile(@Valid @ModelAttribute FileRenameRequest fileRenameRequest,
                                    BindingResult bindingResult,
-                                   @SessionAttribute UserSessionDto userSessionDto,
+                                   @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            fileService.renameFile(userSessionDto.id(), fileRenameRequest);
+            fileService.renameFile(currentUser.getId(), fileRenameRequest);
         }
 
         return new RedirectView(HOME_PAGE_URI);

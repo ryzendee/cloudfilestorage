@@ -1,7 +1,7 @@
 package com.app.cloudfilestorage.controller;
 
-import com.app.cloudfilestorage.dto.UserSessionDto;
 import com.app.cloudfilestorage.dto.request.*;
+import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +11,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -37,12 +37,12 @@ public class FolderController {
     @PostMapping("/upload")
     public RedirectView uploadFolder(@Valid @ModelAttribute FolderUploadRequest folderUploadRequest,
                                      BindingResult bindingResult,
-                                     @SessionAttribute UserSessionDto userSessionDto,
+                                     @AuthenticationPrincipal UserEntity currentUser,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.uploadFolder(userSessionDto.id(), folderUploadRequest);
+            folderService.uploadFolder(currentUser.getId(), folderUploadRequest);
             redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Folder created successfully!");
         }
 
@@ -52,13 +52,13 @@ public class FolderController {
     @PostMapping("/empty")
     public RedirectView createEmptyFolder(@Valid @ModelAttribute FolderCreateRequest folderCreateRequest,
                                           BindingResult bindingResult,
-                                          @SessionAttribute UserSessionDto userSessionDto,
+                                          @AuthenticationPrincipal UserEntity currentUser,
                                           RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.createEmptyFolder(userSessionDto.id(), folderCreateRequest);
+            folderService.createEmptyFolder(currentUser.getId(), folderCreateRequest);
             redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Folder created successfully!");
         }
 
@@ -68,12 +68,12 @@ public class FolderController {
     @PostMapping("/delete")
     public RedirectView deleteFolder(@Valid @ModelAttribute FolderDeleteRequest folderDeleteRequest,
                                      BindingResult bindingResult,
-                                     @SessionAttribute UserSessionDto userSessionDto,
+                                     @AuthenticationPrincipal UserEntity currentUser,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.deleteFolder(userSessionDto.id(), folderDeleteRequest);
+            folderService.deleteFolder(currentUser.getId(), folderDeleteRequest);
             redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Folder was deleted successfully");
         }
 
@@ -84,13 +84,13 @@ public class FolderController {
     @PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Object downloadFolder(@Valid @ModelAttribute FolderDownloadRequest folderDownloadRequest,
                                  BindingResult bindingResult,
-                                 @SessionAttribute UserSessionDto userSessionDto,
+                                 @AuthenticationPrincipal UserEntity currentUser,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
         } else {
-            ByteArrayOutputStream baos = folderService.downloadFolder(userSessionDto.id(), folderDownloadRequest);
+            ByteArrayOutputStream baos = folderService.downloadFolder(currentUser.getId(), folderDownloadRequest);
             Resource folderResource = new ByteArrayResource(baos.toByteArray());
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
@@ -101,12 +101,12 @@ public class FolderController {
     @PostMapping("/rename")
     public RedirectView renameFolder(@Valid @ModelAttribute FolderRenameRequest folderRenameRequest,
                                      BindingResult bindingResult,
-                                     @SessionAttribute UserSessionDto userSessionDto,
+                                     @AuthenticationPrincipal UserEntity currentUser,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
-            folderService.renameFolder(userSessionDto.id(), folderRenameRequest);
+            folderService.renameFolder(currentUser.getId(), folderRenameRequest);
             redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Folder was renamed successfully");
         }
 
