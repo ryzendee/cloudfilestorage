@@ -11,7 +11,7 @@
                     <div class="form-outline">
                         <input th:name="updatedName" class="form-control" type="text" autocomplete="off">
                     </div>
-                    <input th:name="currentFolderPath" th:value="${currentPath}" type="hidden"/>
+                    <input id="filePath" th:name="path" type="hidden"/>
                     <input id="fileCurrentName" th:name="currentName" type="hidden">
                     <input id="fileExtension" th:name="extension" type="hidden"/>
                 </form>

@@ -5,7 +5,7 @@
         <span th:text="${file.name}">No data</span>
     </td>
     <td>Me</td>
-    <td th:text="${formattedDate}">No data</td>
+    <td th:text="${file.lastModified}">-</td>
     <td th:text="${file.formattedSize}">No data</td>
     <td>My disk</td>
     <td>
@@ -37,6 +37,7 @@
                     <button class="dropdown-item" data-bs-target="#fileRenameModal"
                             data-bs-toggle="modal"
                             th:attr="data-file-current-name=${file.name},
+                                     data-file-path=${file.path},
                                      data-file-extension=${file.extension}">
                         <i class="bi bi-pencil-square"></i>
                         Rename
