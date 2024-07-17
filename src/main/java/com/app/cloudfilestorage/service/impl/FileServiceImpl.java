@@ -40,7 +40,9 @@ public class FileServiceImpl implements FileService {
     public List<FileResponse> getAllFilesByUserId(Long userId) {
         try {
             String userRootFolder = formatBasePath(userId);
-            return findAllByPathAndMapToResponse(userId, userRootFolder);
+            return minioFileRepository.findAllFilesByPathRecursive(userRootFolder).stream()
+                    .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
+                    .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find all user files", ex);
             throw new FileServiceException("Failed to find all user files");
@@ -51,7 +53,9 @@ public class FileServiceImpl implements FileService {
     public List<FileResponse> getFilesForPathByUserId(Long userId, String path) {
         try {
             String formattedPath = formatPathForFolder(userId, path);
-            return findAllByPathAndMapToResponse(userId, formattedPath);
+            return minioFileRepository.findAllFilesByPath(formattedPath).stream()
+                    .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
+                    .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find files by path: {}", path, ex);
             throw new FileServiceException("Failed to load files");
@@ -113,11 +117,5 @@ public class FileServiceImpl implements FileService {
         } catch (MinioObjectExistsException ex) {
             throw new FolderServiceException("This name is already exists");
         }
-    }
-
-    private List<FileResponse> findAllByPathAndMapToResponse(Long userId, String path) throws MinioRepositoryException {
-        return minioFileRepository.findAllFilesByPath(path).stream()
-                .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
-                .toList();
     }
 }

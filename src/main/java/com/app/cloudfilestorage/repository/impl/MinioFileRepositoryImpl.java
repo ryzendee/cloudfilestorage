@@ -45,6 +45,17 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
     }
 
     @Override
+    public List<MinioObject> findAllFilesByPathRecursive(String path) {
+        try {
+            return findAllRecursive(path).stream()
+                    .filter(this::isFile)
+                    .map(itemToMinioObjectMapper::map)
+                    .toList();
+        } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {
+            throw new MinioRepositoryException(ex);
+        }    }
+
+    @Override
     public void saveFile(MinioSaveDataDto saveDto) {
         try {
             if (isObjectNameExists(saveDto.objectName())) {
@@ -124,13 +135,21 @@ public class MinioFileRepositoryImpl implements MinioFileRepository {
     }
 
     private List<Item> findAllNonRecursive(String path) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return findAll(path, false);
+    }
+
+    private List<Item> findAllRecursive(String path) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return findAll(path, true);
+    }
+
+    private List<Item> findAll(String path, boolean isRecursive) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         List<Item> itemList = new ArrayList<>();
 
         Iterable<Result<Item>> iterable = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
                         .prefix(path)
-                        .recursive(false)
+                        .recursive(isRecursive)
                         .build()
         );
 
