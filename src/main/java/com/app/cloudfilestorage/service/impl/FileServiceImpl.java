@@ -41,7 +41,7 @@ public class FileServiceImpl implements FileService {
         try {
             String userRootFolder = formatBasePath(userId);
             return minioFileRepository.findAllFilesByPathRecursive(userRootFolder).stream()
-                    .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
+                    .map(minioObj -> minioObjectToFileResponseMapper.map(userId, minioObj))
                     .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find all user files", ex);
@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService {
         try {
             String formattedPath = formatPathForFolder(userId, path);
             return minioFileRepository.findAllFilesByPath(formattedPath).stream()
-                    .map(minioObj -> minioObjectToFileResponseMapper.map(minioObj, userId))
+                    .map(minioObj -> minioObjectToFileResponseMapper.map(userId, minioObj))
                     .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find files by path: {}", path, ex);

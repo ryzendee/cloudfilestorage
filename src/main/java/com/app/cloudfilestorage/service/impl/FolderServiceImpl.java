@@ -34,7 +34,7 @@ public class FolderServiceImpl implements FolderService {
         try {
             String userRootFolder = formatBasePath(userId);
             return minioFolderRepository.findAllFoldersByPathRecursive(userRootFolder).stream()
-                    .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
+                    .map(minioObj -> minioObjectToFolderResponseMapper.map(userId, minioObj))
                     .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find all user folders", ex);
@@ -47,7 +47,7 @@ public class FolderServiceImpl implements FolderService {
         try {
             String formattedPath = formatPathForFolder(userId, path);
             return minioFolderRepository.findAllFoldersByPath(formattedPath).stream()
-                    .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
+                    .map(minioObj -> minioObjectToFolderResponseMapper.map(userId, minioObj))
                     .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find folders for path: {}", path, ex);
