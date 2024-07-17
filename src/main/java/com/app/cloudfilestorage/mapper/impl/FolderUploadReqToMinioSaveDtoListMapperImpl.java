@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPath;
+import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFolder;
 
 @Component
 public class FolderUploadReqToMinioSaveDtoListMapperImpl implements FolderUploadReqToMinioSaveDtoListMapper {
@@ -19,7 +19,7 @@ public class FolderUploadReqToMinioSaveDtoListMapperImpl implements FolderUpload
     @Override
     public List<MinioSaveDataDto> map(Long userId, FolderUploadRequest from) {
         try {
-            String basePath = formatPath(userId, from.getCurrentFolderPath());
+            String basePath = formatPathForFolder(userId, from.getCurrentFolderPath());
 
             List<MinioSaveDataDto> minioSaveDataDtoList = new ArrayList<>();
             for (MultipartFile file : from.getFiles()) {

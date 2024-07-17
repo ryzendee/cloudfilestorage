@@ -3,8 +3,6 @@ package com.app.cloudfilestorage.mapper;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.models.MinioObject;
 import com.app.cloudfilestorage.utils.FileNameFormatterUtil;
-import com.app.cloudfilestorage.utils.PathGeneratorUtil;
-import org.apache.commons.io.FileUtils;
 import org.mapstruct.*;
 
 import static com.app.cloudfilestorage.utils.PathGeneratorUtil.removeTemplateFromPath;
