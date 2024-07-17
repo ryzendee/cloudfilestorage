@@ -1,4 +1,4 @@
-package com.app.cloudfilestorage.dto.request;
+package com.app.cloudfilestorage.dto.request.file;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileDeleteRequest {
+public class FileDownloadRequest {
 
+    @NotBlank(message = "File name must not be blank")
+    private String name;
     @NotBlank(message = "File path must not be blank")
     private String path;
 }

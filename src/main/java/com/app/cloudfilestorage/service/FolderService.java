@@ -1,6 +1,6 @@
 package com.app.cloudfilestorage.service;
 
-import com.app.cloudfilestorage.dto.request.*;
+import com.app.cloudfilestorage.dto.request.folder.*;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 
 import java.io.ByteArrayOutputStream;

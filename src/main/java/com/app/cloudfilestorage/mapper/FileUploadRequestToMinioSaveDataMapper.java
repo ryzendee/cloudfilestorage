@@ -1,7 +1,7 @@
 package com.app.cloudfilestorage.mapper;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
-import com.app.cloudfilestorage.dto.request.FileUploadRequest;
+import com.app.cloudfilestorage.dto.request.file.FileUploadRequest;
 
 public interface FileUploadRequestToMinioSaveDataMapper {
 

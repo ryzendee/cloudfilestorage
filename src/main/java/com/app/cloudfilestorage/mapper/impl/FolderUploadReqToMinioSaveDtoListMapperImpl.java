@@ -1,7 +1,7 @@
 package com.app.cloudfilestorage.mapper.impl;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
-import com.app.cloudfilestorage.dto.request.FolderUploadRequest;
+import com.app.cloudfilestorage.dto.request.folder.FolderUploadRequest;
 import com.app.cloudfilestorage.exception.MappingException;
 import com.app.cloudfilestorage.mapper.FolderUploadReqToMinioSaveDtoListMapper;
 import org.springframework.stereotype.Component;

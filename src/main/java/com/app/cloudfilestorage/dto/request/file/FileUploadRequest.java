@@ -1,4 +1,4 @@
-package com.app.cloudfilestorage.dto.request;
+package com.app.cloudfilestorage.dto.request.file;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.app.cloudfilestorage.dto.request;
+package com.app.cloudfilestorage.dto.request.folder;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

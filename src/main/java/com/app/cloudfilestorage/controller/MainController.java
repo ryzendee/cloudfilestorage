@@ -1,7 +1,11 @@
 package com.app.cloudfilestorage.controller;
 
 import com.app.cloudfilestorage.dto.BreadcrumbDto;
-import com.app.cloudfilestorage.dto.request.*;
+import com.app.cloudfilestorage.dto.request.file.FileDeleteRequest;
+import com.app.cloudfilestorage.dto.request.file.FileDownloadRequest;
+import com.app.cloudfilestorage.dto.request.file.FileRenameRequest;
+import com.app.cloudfilestorage.dto.request.file.FileUploadRequest;
+import com.app.cloudfilestorage.dto.request.folder.*;
 import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.entity.UserEntity;

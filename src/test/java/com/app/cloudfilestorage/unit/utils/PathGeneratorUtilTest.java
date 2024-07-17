@@ -1,6 +1,6 @@
 package com.app.cloudfilestorage.unit.utils;
 
-import com.app.cloudfilestorage.dto.request.FolderRenameRequest;
+import com.app.cloudfilestorage.dto.request.folder.FolderRenameRequest;
 import com.app.cloudfilestorage.utils.PathGeneratorUtil;
 import org.junit.jupiter.api.Test;
 

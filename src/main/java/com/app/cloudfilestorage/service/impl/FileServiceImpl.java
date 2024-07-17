@@ -1,10 +1,10 @@
 package com.app.cloudfilestorage.service.impl;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
-import com.app.cloudfilestorage.dto.request.FileDeleteRequest;
-import com.app.cloudfilestorage.dto.request.FileDownloadRequest;
-import com.app.cloudfilestorage.dto.request.FileRenameRequest;
-import com.app.cloudfilestorage.dto.request.FileUploadRequest;
+import com.app.cloudfilestorage.dto.request.file.FileDeleteRequest;
+import com.app.cloudfilestorage.dto.request.file.FileDownloadRequest;
+import com.app.cloudfilestorage.dto.request.file.FileRenameRequest;
+import com.app.cloudfilestorage.dto.request.file.FileUploadRequest;
 import com.app.cloudfilestorage.dto.response.FileResponse;
 import com.app.cloudfilestorage.exception.FileServiceException;
 import com.app.cloudfilestorage.exception.FolderServiceException;

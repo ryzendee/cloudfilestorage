@@ -1,6 +1,6 @@
 package com.app.cloudfilestorage.controller;
 
-import com.app.cloudfilestorage.dto.request.*;
+import com.app.cloudfilestorage.dto.request.folder.*;
 import com.app.cloudfilestorage.entity.UserEntity;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;

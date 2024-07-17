@@ -1,7 +1,7 @@
 package com.app.cloudfilestorage.service.impl;
 
 import com.app.cloudfilestorage.dto.MinioSaveDataDto;
-import com.app.cloudfilestorage.dto.request.*;
+import com.app.cloudfilestorage.dto.request.folder.*;
 import com.app.cloudfilestorage.dto.response.FolderResponse;
 import com.app.cloudfilestorage.exception.FolderServiceException;
 import com.app.cloudfilestorage.exception.MappingException;
