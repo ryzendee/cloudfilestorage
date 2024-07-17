@@ -33,7 +33,9 @@ public class FolderServiceImpl implements FolderService {
     public List<FolderResponse> getAllFoldersByUserId(Long userId) {
         try {
             String userRootFolder = formatBasePath(userId);
-            return findAllByPathAndMapToResponse(userId, userRootFolder);
+            return minioFolderRepository.findAllFoldersByPathRecursive(userRootFolder).stream()
+                    .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
+                    .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find all user folders", ex);
             throw new FolderServiceException("Failed to find all folders");
@@ -44,7 +46,9 @@ public class FolderServiceImpl implements FolderService {
     public List<FolderResponse> getFoldersForPathByUserId(Long userId, String path) {
         try {
             String formattedPath = formatPathForFolder(userId, path);
-            return findAllByPathAndMapToResponse(userId, formattedPath);
+            return minioFolderRepository.findAllFoldersByPath(formattedPath).stream()
+                    .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
+                    .toList();
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find folders for path: {}", path, ex);
             throw new FolderServiceException("Failed to load folders");
@@ -111,11 +115,5 @@ public class FolderServiceImpl implements FolderService {
         } catch (MinioObjectExistsException ex) {
             throw new FolderServiceException("This name is already exists");
         }
-    }
-
-    private List<FolderResponse> findAllByPathAndMapToResponse(Long userId, String path) throws MinioRepositoryException {
-        return minioFolderRepository.findAllFoldersByPath(path).stream()
-                .map(minioObject -> minioObjectToFolderResponseMapper.map(minioObject, userId))
-                .toList();
     }
 }

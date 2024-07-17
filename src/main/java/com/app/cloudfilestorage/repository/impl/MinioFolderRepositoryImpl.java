@@ -24,8 +24,6 @@ import java.util.zip.ZipOutputStream;
 
 @Repository
 public class MinioFolderRepositoryImpl implements MinioFolderRepository {
-    private static final boolean NON_RECURSIVE = false;
-    private static final boolean RECURSIVE = true;
     private static final int PART_SIZE = -1;
     private final MinioClient minioClient;
     private final ItemToMinioObjectMapper itemToMinioObjectMapper;
@@ -77,7 +75,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
     @Override
     public void deleteFolderByPath(String path) {
         try {
-            List<Item> itemList = findAll(path, RECURSIVE);
+            List<Item> itemList = findAllRecursive(path);
 
             for (Item item : itemList) {
                 removeObject(item.objectName());
@@ -96,7 +94,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
                 throw new MinioObjectExistsException("This object name already exists: " + newPath);
             }
 
-            List<Item> objectsInOldFolder = findAll(oldPath, RECURSIVE);
+            List<Item> objectsInOldFolder = findAllRecursive(oldPath);
 
             for (Item item : objectsInOldFolder) {
                 String oldName = item.objectName();
@@ -113,7 +111,19 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
     @Override
     public List<MinioObject> findAllFoldersByPath(String path) {
         try {
-            return findAll(path, NON_RECURSIVE).stream()
+            return findAllNonRecursive(path).stream()
+                    .filter(Item::isDir)
+                    .map(itemToMinioObjectMapper::map)
+                    .toList();
+        } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {
+            throw new MinioRepositoryException(ex);
+        }
+    }
+
+    @Override
+    public List<MinioObject> findAllFoldersByPathRecursive(String path) {
+        try {
+            return findAllRecursive(path).stream()
                     .filter(Item::isDir)
                     .map(itemToMinioObjectMapper::map)
                     .toList();
@@ -127,7 +137,7 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-            List<Item> itemList = findAll(path, RECURSIVE);
+            List<Item> itemList = findAllRecursive(path);
 
             for (Item item : itemList) {
                 try (InputStream objectStream = getObjectStream(item.objectName())) {
@@ -209,6 +219,13 @@ public class MinioFolderRepositoryImpl implements MinioFolderRepository {
                         .object(objectName)
                         .build()
         );
+    }
+
+    private List<Item> findAllNonRecursive(String path) throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
+        return findAll(path, false);
+    }
+    private List<Item> findAllRecursive(String path) throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
+        return findAll(path, true);
     }
 
     private List<Item> findAll(String path, boolean isRecursive) throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {

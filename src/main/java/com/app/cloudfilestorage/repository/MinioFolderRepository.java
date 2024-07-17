@@ -13,5 +13,6 @@ public interface MinioFolderRepository {
     void deleteFolderByPath(String path);
     void renameFolder(String oldPath, String newPath);
     List<MinioObject> findAllFoldersByPath(String path);
+    List<MinioObject> findAllFoldersByPathRecursive(String path);
     ByteArrayOutputStream downloadFolderByPath(String path);
 }
