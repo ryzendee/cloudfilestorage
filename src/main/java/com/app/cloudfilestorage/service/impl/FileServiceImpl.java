@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static com.app.cloudfilestorage.utils.FileNameUtil.renameFileInPath;
 import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
 
 @Service
@@ -38,7 +39,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileResponse> getAllFilesByUserId(Long userId) {
         try {
-            String userRootFolder = formatPath(userId);
+            String userRootFolder = formatBasePath(userId);
             return findAllByPathAndMapToResponse(userId, userRootFolder);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find all user files", ex);
@@ -49,7 +50,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileResponse> getFilesForPathByUserId(Long userId, String path) {
         try {
-            String formattedPath = formatPath(userId, path);
+            String formattedPath = formatPathForFolder(userId, path);
             return findAllByPathAndMapToResponse(userId, formattedPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to find files by path: {}", path, ex);
@@ -60,7 +61,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void uploadFile(Long userId, FileUploadRequest uploadRequest) {
         try {
-            String basePath = formatPath(userId, uploadRequest.getCurrentFolderPath());
+            String basePath = formatPathForFolder(userId, uploadRequest.getCurrentFolderPath());
             MinioSaveDataDto minioSaveDataDto = minioSaveDataMapper.map(basePath, uploadRequest);
             minioFileRepository.saveFile(minioSaveDataDto);
         } catch (MinioRepositoryException ex) {
@@ -74,7 +75,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteFile(Long userId, FileDeleteRequest deleteRequest) {
         try {
-            String formattedPath = formatPath(userId, deleteRequest.getPath());
+            String formattedPath = formatPathForFile(userId, deleteRequest.getPath());
             minioFileRepository.deleteFileByObjectName(formattedPath);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to delete file", ex);
@@ -85,7 +86,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource downloadFile(Long userId, FileDownloadRequest downloadRequest) {
         try {
-            String formattedPath = formatPath(userId, downloadRequest.getPath());
+            String formattedPath = formatPathForFile(userId, downloadRequest.getPath());
 
             try (InputStream inputStream = minioFileRepository.downloadFileByObjectName(formattedPath)) {
                 return new ByteArrayResource(inputStream.readAllBytes());
@@ -100,11 +101,12 @@ public class FileServiceImpl implements FileService {
     @Override
     public void renameFile(Long userId, FileRenameRequest renameRequest) {
         try {
-            String currentObjectName = formatPathForFile(userId, renameRequest.getCurrentFolderPath(), renameRequest.getCurrentName());
-            String updatedObjectName = formatPathForFile(userId, renameRequest.getCurrentFolderPath(), renameRequest.getUpdatedName());
-            updatedObjectName += ".";
-            updatedObjectName += renameRequest.getExtension();
-            minioFileRepository.renameFile(currentObjectName, updatedObjectName);
+            String pathWithUpdatedName = renameFileInPath(renameRequest.getPath(), renameRequest.getUpdatedName());
+
+            String formattedPathWithUpdatedName = formatPathForFile(userId, pathWithUpdatedName);
+            String formattedPathWithCurrentName = formatPathForFile(userId, renameRequest.getPath());
+
+            minioFileRepository.renameFile(formattedPathWithCurrentName, formattedPathWithUpdatedName);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to rename folder", ex);
             throw new FolderServiceException("Failed to rename folder");
