@@ -5,6 +5,7 @@ import com.app.cloudfilestorage.dto.request.file.FileDownloadRequest;
 import com.app.cloudfilestorage.dto.request.file.FileRenameRequest;
 import com.app.cloudfilestorage.dto.request.file.FileUploadRequest;
 import com.app.cloudfilestorage.entity.UserEntity;
+import com.app.cloudfilestorage.enums.FlashAttr;
 import com.app.cloudfilestorage.service.FileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,11 @@ import static org.springframework.web.util.UriUtils.encode;
 public class FileController {
 
     private static final String HOME_PAGE_URI = "/";
-    private static final String FLASH_ATR_VALIDATION_ERROR_MESSAGE = "validationErrorMessage";
-    private static final String FLASH_ATR_SUCCESS_MESSAGE = "successMessage";
+    private static final String FLASH_ATR_VALIDATION_ERROR_MESSAGE = FlashAttr.VALIDATION_ERROR_MESSAGE.getName();
+    private static final String FLASH_ATR_SUCCESS_MESSAGE = FlashAttr.SUCCESS_MESSAGE.getName();
     private final FileService fileService;
 
-    @PostMapping()
+    @PostMapping("/upload")
     public RedirectView uploadFile(@Valid @ModelAttribute FileUploadRequest fileUploadRequest,
                                    BindingResult bindingResult,
                                    @AuthenticationPrincipal UserEntity currentUser,
@@ -45,7 +46,7 @@ public class FileController {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.uploadFile(currentUser.getId(), fileUploadRequest);
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was uploaded!");
+            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was uploaded");
         }
 
         return new RedirectView(HOME_PAGE_URI);
@@ -60,7 +61,7 @@ public class FileController {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.deleteFile(currentUser.getId(), fileDeleteRequest);
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was deleted!");
+            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was deleted");
         }
 
         return new RedirectView(HOME_PAGE_URI);
@@ -95,6 +96,7 @@ public class FileController {
             redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.renameFile(currentUser.getId(), fileRenameRequest);
+            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was renamed");
         }
 
         return new RedirectView(HOME_PAGE_URI);

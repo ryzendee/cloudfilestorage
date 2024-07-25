@@ -7,6 +7,7 @@ import com.app.cloudfilestorage.dto.request.folder.FolderDownloadRequest;
 import com.app.cloudfilestorage.dto.request.folder.FolderRenameRequest;
 import com.app.cloudfilestorage.dto.response.SearchResultResponse;
 import com.app.cloudfilestorage.entity.UserEntity;
+import com.app.cloudfilestorage.enums.FlashAttr;
 import com.app.cloudfilestorage.service.CloudStorageSearchService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class SearchController {
 
     private static final String HOME_PAGE = "/";
+    private static final String FLASH_ATR_VALIDATION_ERROR_MESSAGE = FlashAttr.VALIDATION_ERROR_MESSAGE.getName();
+
     private final CloudStorageSearchService cloudStorageSearchService;
 
     @GetMapping
@@ -33,7 +36,7 @@ public class SearchController {
                          @AuthenticationPrincipal UserEntity currentUser,
                          Model model) {
         if (!isQueryValid(query)) {
-            model.addAttribute("validationErrorMessage", "Search query must not be blank or empty");
+            model.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, "Search query must not be blank or empty");
             return new RedirectView(HOME_PAGE);
         } else {
             SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(currentUser.getId(), query);

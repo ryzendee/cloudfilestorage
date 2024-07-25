@@ -2,6 +2,7 @@ package com.app.cloudfilestorage.controller;
 
 import com.app.cloudfilestorage.dto.request.folder.*;
 import com.app.cloudfilestorage.entity.UserEntity;
+import com.app.cloudfilestorage.enums.FlashAttr;
 import com.app.cloudfilestorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ import static com.app.cloudfilestorage.utils.BindingResultResolver.getFirstMessa
 @RequiredArgsConstructor
 public class FolderController {
     private static final String HOME_PAGE_URI = "/";
-    private static final String FLASH_ATR_VALIDATION_ERROR_MESSAGE = "validationErrorMessage";
-    private static final String FLASH_ATR_SUCCESS_MESSAGE = "successMessage";
+    private static final String FLASH_ATR_VALIDATION_ERROR_MESSAGE = FlashAttr.VALIDATION_ERROR_MESSAGE.getName();
+    private static final String FLASH_ATR_SUCCESS_MESSAGE = FlashAttr.SUCCESS_MESSAGE.getName();
     private final FolderService folderService;
 
     @PostMapping("/upload")
