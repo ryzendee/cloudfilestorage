@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.FolderNameUtil.renameLastFolderInPath;
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
+import static com.app.cloudfilestorage.utils.PathUtil.*;
 
 @Service
 @Slf4j

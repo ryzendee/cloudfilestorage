@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.FileNameUtil.renameFileInPath;
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
+import static com.app.cloudfilestorage.utils.PathUtil.*;
 
 @Service
 @Slf4j

@@ -7,7 +7,7 @@ import org.mapstruct.Named;
 
 import java.nio.file.Paths;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.removeTemplateFromPath;
+import static com.app.cloudfilestorage.utils.PathUtil.removeTemplateFromPath;
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
 
 public interface BaseMinioObjectMapper <T> {

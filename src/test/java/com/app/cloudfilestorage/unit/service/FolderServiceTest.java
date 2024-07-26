@@ -26,7 +26,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static com.app.cloudfilestorage.utils.FolderNameUtil.renameLastFolderInPath;
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
+import static com.app.cloudfilestorage.utils.PathUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;

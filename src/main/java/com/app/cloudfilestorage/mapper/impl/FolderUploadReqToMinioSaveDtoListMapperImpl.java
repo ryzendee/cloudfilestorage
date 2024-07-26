@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.formatPathForFolder;
+import static com.app.cloudfilestorage.utils.PathUtil.formatPathForFolder;
 
 @Component
 public class FolderUploadReqToMinioSaveDtoListMapperImpl implements FolderUploadReqToMinioSaveDtoListMapper {

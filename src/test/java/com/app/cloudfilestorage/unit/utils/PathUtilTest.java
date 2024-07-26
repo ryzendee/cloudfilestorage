@@ -1,12 +1,12 @@
 package com.app.cloudfilestorage.unit.utils;
 
-import com.app.cloudfilestorage.utils.PathGeneratorUtil;
+import com.app.cloudfilestorage.utils.PathUtil;
 import org.junit.jupiter.api.Test;
 
-import static com.app.cloudfilestorage.utils.PathGeneratorUtil.*;
+import static com.app.cloudfilestorage.utils.PathUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PathGeneratorUtilTest {
+class PathUtilTest {
 
     private static final String FORMATTED_TEMPLATE = "user-1-files";
     private static final Long USER_ID = 1L;
@@ -16,7 +16,7 @@ class PathGeneratorUtilTest {
         String path = "user-1-files/folder/subfolder/";
         String expected = "/folder/subfolder/";
 
-        String pathWithoutTemplate = PathGeneratorUtil.removeTemplateFromPath(USER_ID, path);
+        String pathWithoutTemplate = PathUtil.removeTemplateFromPath(USER_ID, path);
         assertThat(pathWithoutTemplate).isEqualTo(expected);
     }
 

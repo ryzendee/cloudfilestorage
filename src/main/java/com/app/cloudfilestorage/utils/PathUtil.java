@@ -1,6 +1,6 @@
 package com.app.cloudfilestorage.utils;
 
-public final class PathGeneratorUtil {
+public final class PathUtil {
     private static final String SEPARATOR = "/";
     private static final String TEMPLATE = "user-%d-files";
     private static final String REGEX = "/{2,}";
