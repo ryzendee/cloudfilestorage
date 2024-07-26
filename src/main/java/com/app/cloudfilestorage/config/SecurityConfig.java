@@ -24,6 +24,7 @@ public class SecurityConfig {
         httpSecurity
                 .formLogin(formConfigurer -> formConfigurer
                         .loginPage("/login")
+                        .defaultSuccessUrl("/")
                         .permitAll()
                 ).logout(logoutConfigurer -> logoutConfigurer
                         .logoutUrl("/logout")
@@ -40,9 +41,7 @@ public class SecurityConfig {
                 .exceptionHandling(handlingConfigurer ->
                         handlingConfigurer
                                 .accessDeniedPage("/access-denied")
-                                .authenticationEntryPoint((req, resp, authEx) -> {
-                                    resp.sendRedirect("/login");
-                                })
+                                .authenticationEntryPoint((req, resp, authEx) -> resp.sendRedirect("/login"))
                 );
 
         return httpSecurity.build();
