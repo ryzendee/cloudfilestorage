@@ -65,8 +65,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public void uploadFile(Long userId, FileUploadRequest uploadRequest) {
         try {
-            String basePath = formatPathForFolder(userId, uploadRequest.getCurrentFolderPath());
-            MinioSaveDataDto minioSaveDataDto = minioSaveDataMapper.map(basePath, uploadRequest);
+            String formattedPath = formatPathForFolder(userId, uploadRequest.getCurrentFolderPath());
+            MinioSaveDataDto minioSaveDataDto = minioSaveDataMapper.map(formattedPath, uploadRequest);
             minioFileRepository.saveFile(minioSaveDataDto);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to upload file", ex);
@@ -113,9 +113,9 @@ public class FileServiceImpl implements FileService {
             minioFileRepository.renameFile(formattedPathWithCurrentName, formattedPathWithUpdatedName);
         } catch (MinioRepositoryException ex) {
             log.warn("Failed to rename folder", ex);
-            throw new FolderServiceException("Failed to rename folder");
+            throw new FileServiceException("Failed to rename folder");
         } catch (MinioObjectExistsException ex) {
-            throw new FolderServiceException("This name is already exists");
+            throw new FileServiceException("This name is already exists");
         }
     }
 }
