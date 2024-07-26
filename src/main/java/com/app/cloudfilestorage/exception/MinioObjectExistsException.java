@@ -4,4 +4,7 @@ public class MinioObjectExistsException extends RuntimeException {
     public MinioObjectExistsException(String message) {
         super(message);
     }
+
+    public MinioObjectExistsException() {
+    }
 }
