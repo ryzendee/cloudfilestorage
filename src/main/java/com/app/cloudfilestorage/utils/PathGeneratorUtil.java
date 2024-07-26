@@ -2,50 +2,48 @@ package com.app.cloudfilestorage.utils;
 
 public final class PathGeneratorUtil {
     private static final String SEPARATOR = "/";
-    private static final String TEMPLATE = "user-%d-files/";
+    private static final String TEMPLATE = "user-%d-files";
+    private static final String REGEX = "/{2,}";
+
 
     public static String formatBasePath(Long userId) {
-        return formatPathWithTemplate(userId);
+        return formatTemplate(userId) + SEPARATOR;
     }
-    
+
     public static String formatPathForFolder(Long userId, String currentFolderPath, String folderPath) {
-        if (currentFolderPath.equals(SEPARATOR)) {
-            return formatPathWithTemplate(userId) + folderPath;
-        }
+        String basePath = formatTemplate(userId);
+        String joinedPath = String.join(SEPARATOR, basePath, currentFolderPath, folderPath)
+                .replaceAll(REGEX, SEPARATOR);
 
-        folderPath = folderPath.endsWith(SEPARATOR)
-                ? folderPath
-                : folderPath + SEPARATOR;
-
-        return formatPathWithTemplate(userId) + currentFolderPath + folderPath;
+        return joinedPath.endsWith(SEPARATOR)
+                ? joinedPath
+                : joinedPath + SEPARATOR;
     }
 
     public static String formatPathForFolder(Long userId, String folderPath) {
-        if (folderPath.equals(SEPARATOR)) {
-            return formatPathWithTemplate(userId);
-        }
+        String basePath = formatTemplate(userId);
+        String joinedPath = String.join(SEPARATOR, basePath, folderPath)
+                .replaceAll(REGEX, SEPARATOR);
 
-        folderPath = folderPath.endsWith(SEPARATOR)
-                ? folderPath
-                : folderPath + SEPARATOR;
-
-        return formatPathWithTemplate(userId) + SEPARATOR + folderPath;
+        return joinedPath.endsWith(SEPARATOR)
+                ? joinedPath
+                : joinedPath + SEPARATOR;
     }
 
     public static String formatPathForFile(Long userId, String filePath) {
-        if (filePath.startsWith(SEPARATOR)) {
-            return formatPathWithTemplate(userId) + filePath.substring(1);
-        }
+        String basePath = formatTemplate(userId);
 
-        return formatPathWithTemplate(userId) + filePath;
+        return String.join(SEPARATOR, basePath, filePath)
+                .replaceAll(REGEX, SEPARATOR);
     }
 
     public static String removeTemplateFromPath(Long userId, String path) {
-        String pathToRemove = formatPathWithTemplate(userId);
+        String pathToRemove = formatTemplate(userId);
+
         return path.replace(pathToRemove, "");
     }
 
-    private static String formatPathWithTemplate(Long userId) {
+    private static String formatTemplate(Long userId) {
         return TEMPLATE.formatted(userId);
     }
 }
