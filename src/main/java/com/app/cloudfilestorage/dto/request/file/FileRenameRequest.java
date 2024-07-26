@@ -15,10 +15,7 @@ public class FileRenameRequest {
 
     @NotBlank(message = "Updated file name must not be blank")
     private String updatedName;
-    @NotBlank(message = "Current file name must not be blank")
-    private String currentName;
     @NotBlank(message = "File path must not be blank")
     private String path;
     private String extension;
-    private String objectName;
 }

@@ -7,7 +7,7 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form enctype="multipart/form-data" id="fileUploadForm" method="post" th:action="@{/files}"
+                <form enctype="multipart/form-data" id="fileUploadForm" method="post" th:action="@{/files/upload}"
                       th:object="${fileUploadRequest}">
                     <label class="form-label" for="fileUploadInput">Select file</label>
                     <input class="form-control" id="fileUploadInput" th:field="*{file}" type="file"/>

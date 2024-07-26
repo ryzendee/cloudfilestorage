@@ -18,5 +18,4 @@ public class FolderRenameRequest {
     private String currentName;
     @NotBlank(message = "Folder path must not be blank")
     private String path;
-    private String objectName;
 }
