@@ -50,11 +50,12 @@ public class MinioFileRepositoryImpl extends AbstractMinioRepository implements 
             throw new MinioRepositoryException(ex);
         }    }
 
+    //TODO: Add an increment fileName instead of creating an exception
     @Override
     public void saveFile(MinioSaveDataDto saveDto) {
         try {
             if (isObjectNameExists(saveDto.objectName())) {
-                throw new MinioObjectExistsException("This object name already exists" + saveDto.objectName());
+                throw new MinioObjectExistsException("This object name already exists: " + saveDto.objectName());
             }
 
             minioClient.putObject(
@@ -100,6 +101,10 @@ public class MinioFileRepositoryImpl extends AbstractMinioRepository implements 
     @Override
     public void renameFile(String currentName, String updatedName) {
         try {
+            if (isObjectNameExists(updatedName)) {
+                throw new MinioObjectExistsException(updatedName + " is already eists!");
+            }
+
             copy(currentName, updatedName);
             removeObject(currentName);
         } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException | IOException ex) {

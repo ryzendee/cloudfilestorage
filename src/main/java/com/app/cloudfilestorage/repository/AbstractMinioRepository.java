@@ -29,11 +29,7 @@ public abstract class AbstractMinioRepository {
             statObject(objectName);
             return true;
         } catch (ErrorResponseException ex) {
-            if (isFileMissing(ex)) {
-                return false;
-            }
-
-            throw ex;
+            return false;
         }
     }
 
