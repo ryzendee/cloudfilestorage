@@ -32,16 +32,16 @@ import static com.app.cloudfilestorage.utils.BreadcrumbUtil.getBreadcrumb;
 @RequiredArgsConstructor
 public class MainController {
 
-    private static final String SEPARATOR = "/";
+    private static final String DEFAULT_PATH = "/";
     private final FolderService folderService;
     private final FileService fileService;
 
     @GetMapping
     public String getMainView(@AuthenticationPrincipal UserEntity currentUser,
-                              @RequestParam(defaultValue = SEPARATOR) String path,
+                              @RequestParam(defaultValue = DEFAULT_PATH) String path,
                               Model model) {
-        if (!path.endsWith(SEPARATOR)) {
-            path += SEPARATOR;
+        if (!path.endsWith("/")) {
+            path += "/";
         }
 
         List<FolderResponse> folderDtoList = folderService.getFoldersForPathByUserId(currentUser.getId(), path);
@@ -50,7 +50,7 @@ public class MainController {
         model.addAttribute("fileList", fileDtoList);
 
         //We don't need breadcrumbs at the default path
-        if (!path.equals(SEPARATOR)) {
+        if (!path.equals(DEFAULT_PATH)) {
             BreadcrumbDto breadcrumbDto = getBreadcrumb(path);
             model.addAttribute("breadcrumbDto", breadcrumbDto);
         }
