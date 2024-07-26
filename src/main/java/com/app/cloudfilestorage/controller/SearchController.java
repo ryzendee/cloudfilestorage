@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
@@ -34,9 +35,10 @@ public class SearchController {
     @GetMapping
     public Object search(@RequestParam String query,
                          @AuthenticationPrincipal UserEntity currentUser,
+                         RedirectAttributes redirectAttributes,
                          Model model) {
         if (!isQueryValid(query)) {
-            model.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, "Search query must not be blank or empty");
+            redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, "Search query must not be blank or empty");
             return new RedirectView(HOME_PAGE);
         } else {
             SearchResultResponse searchResult = cloudStorageSearchService.searchByQuery(currentUser.getId(), query);

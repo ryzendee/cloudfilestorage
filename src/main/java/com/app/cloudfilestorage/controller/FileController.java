@@ -43,10 +43,10 @@ public class FileController {
                                    @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+            redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.uploadFile(currentUser.getId(), fileUploadRequest);
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was uploaded");
+            redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was uploaded");
         }
 
         return new RedirectView(HOME_PAGE_URI);
@@ -58,10 +58,10 @@ public class FileController {
                                    @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+            redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.deleteFile(currentUser.getId(), fileDeleteRequest);
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was deleted");
+            redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was deleted");
         }
 
         return new RedirectView(HOME_PAGE_URI);
@@ -74,10 +74,10 @@ public class FileController {
                                @AuthenticationPrincipal UserEntity currentUser,
                                RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+            redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
             return new RedirectView(HOME_PAGE_URI);
         } else {
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Starts file downloading...");
+            redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "Starts file downloading...");
             Resource fileResource = fileService.downloadFile(currentUser.getId(), fileDownloadRequest);
             String filename = encode(fileDownloadRequest.getName(), StandardCharsets.UTF_8);
 
@@ -93,10 +93,10 @@ public class FileController {
                                    @AuthenticationPrincipal UserEntity currentUser,
                                    RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
+            redirectAttributes.addFlashAttribute(FLASH_ATR_VALIDATION_ERROR_MESSAGE, getFirstMessage(bindingResult));
         } else {
             fileService.renameFile(currentUser.getId(), fileRenameRequest);
-            redirectAttributes.addAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was renamed");
+            redirectAttributes.addFlashAttribute(FLASH_ATR_SUCCESS_MESSAGE, "File was renamed");
         }
 
         return new RedirectView(HOME_PAGE_URI);
