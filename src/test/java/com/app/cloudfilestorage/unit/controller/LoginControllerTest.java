@@ -20,12 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestSecurityConfig.class)
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest {
-
-
     @Autowired
     private MockMvc mockMvc;
 
-    @DisplayName("Get login view")
+    @DisplayName("Get login view: should return view")
     @Test
     void getLoginView_existsView_returnsView() throws Exception {
         mockMvc.perform(
