@@ -1,0 +1,38 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/main-changelog.yml
+  datasource:
+    url: ${SPRING_DB_URL}
+    username: ${SPRING_DB_USERNAME}
+    password: ${SPRING_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+      enabled: true
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
+      password: ${SPRING_REDIS_PASSWORD}
+
+minio:
+  endpoint: ${SPRING_MINIO_ENDPOINT}
+  username: ${SPRING_MINIO_USER}
+  password: ${SPRING_MINIO_PASSWORD}
+  bucket: user-files
+
