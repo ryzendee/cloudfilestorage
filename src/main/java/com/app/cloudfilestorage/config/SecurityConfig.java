@@ -34,7 +34,9 @@ public class SecurityConfig {
                                 "/signup",
                                 "/login",
                                 "/logout",
-                                "/access-denied").permitAll()
+                                "/access-denied",
+                                "/css/**",
+                                "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
