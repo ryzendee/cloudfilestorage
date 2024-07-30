@@ -1,0 +1,11 @@
+.idea
+.gitignore
+Dockerfile
+docker-compose-dev.yml
+docker-compose-dev.yml
+target
+.gradle
+build
+*.md
+src/main/resources/application.yml
+src/main/resources/application-dev.yml
