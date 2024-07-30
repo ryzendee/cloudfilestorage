@@ -1,5 +1,6 @@
 version: '3.9'
 
+
 volumes:
   minio_data:
     driver: local
@@ -7,36 +8,84 @@ volumes:
     driver: local
   redis_data:
     driver: local
+  redis_config:
+    driver: local
 
 services:
+  cloudfilestorage-app:
+    build:
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DB_URL=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - SPRING_DB_USERNAME=${DB_USER}
+      - SPRING_DB_PASSWORD=${DB_PASSWORD}
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SPRING_REDIS_HOST=${REDIS_HOST}
+      - SPRING_REDIS_PORT=6379
+      - SPRING_MINIO_USER=${MINIO_USER}
+      - SPRING_MINIO_PASSWORD=${MINIO_PASSWORD}
+      - SPRING_MINIO_ENDPOINT=http://minio:9000
+    ports:
+      - '8081:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+
   postgres:
     image: postgres:15.6
-    container_name: cloudstorage_postgres_container
+    restart: always
     environment:
-      - POSTGRES_USER=dbusername
-      - POSTGRES_PASSWORD=dbpassword
-      - POSTGRES_DB=cloudstoragedb
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - '5430:5432'
-
+    volumes:
+      - cloudstorage_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: minio/minio:RELEASE.2024-02-17T01-15-57Z.fips
-    container_name: cloudstorage_minio_container
+    restart: always
     environment:
-      MINIO_ROOT_USER: minio-user
-      MINIO_ROOT_PASSWORD: minio-password
-    command: server ~/minio --console-address :9090
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    command: server ~/minio --console-address :9001
     ports:
-      - '9090:9090'
       - '9000:9000'
-
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: timeout 5s bash -c ':> /dev/tcp/127.0.0.1/9000' || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   redis:
     image: redis:7.2.4
-    container_name: cloudstorage_redis_container
+    restart: always
     ports:
       - "6379:6379"
     environment:
-      REDIS_HOST: localhost
-      REDIS_PASSWORD: redispassword
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command:
+      - redis-server
+    volumes:
+      - redis_data:/data
+      - redis_config:/usr/local/etc/redis
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
